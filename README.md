@@ -13,11 +13,11 @@ Copy `stat.html`, `index.html` and your `csv` file to your web server.
 
 The `csv` file can count whatever data you want. It is up to you to generate and update the file so that your graph will be updated (in real time).
 
-> Example
-> I use this graph to monitor my Mina node server uptime.
-> A shell script parse logs ono my server to generate date,ticks `csv` file.
-> This file is automatically uploaded to my web server each time it is updated
-> Then I can display my uptime graph from my web server.
+> Example    
+> I use this graph to monitor my Mina node server uptime.    
+> A shell script parse logs ono my server to generate date,ticks `csv` file.    
+> This file is automatically uploaded to my web server each time it is updated    
+> Then I can display my uptime graph from my web server.    
 
 ## `stat.html`
 The `stat.html` file displays a single CSV file.
