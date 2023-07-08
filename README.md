@@ -16,7 +16,7 @@ Copy `stat.html`, `index.html` and your `csv` file to your web server.
 The `stat.html` file displays a single CSV file.
 
 > Example    
-> https://naamahdaemon.github.io/stat.html?source=uptime.csv&scale=1&label=TICKS&color=%233333FF`
+> https://naamahdaemon.github.io/stat.html?source=uptime.csv&scale=1&label=TICKS&color=%233333FF
 
 It takes the following parameters in the querystring :
 
