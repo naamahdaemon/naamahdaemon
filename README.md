@@ -43,7 +43,7 @@ It takes the following parameters in the querystring :
     Label of the graph
 
 * `scale`
-    * `0` to display brute data on the graph
+    * `0` to display brut data on the graph
     * `1` to scale the graph to 0 (he graph will display the difference between the values on a y-axis origin at 0.)
 
 
