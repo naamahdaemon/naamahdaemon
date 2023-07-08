@@ -14,6 +14,10 @@ Copy `stat.html`, `index.html` and your `csv` file to your web server.
 
 ## `stat.html`
 The `stat.html` file displays a single CSV file.
+
+> Example    
+`stat.html?source=uptime.csv&scale=1&label=test&color=%23FF0000`
+
 It takes the following parameters in the querystring :
 
 * `source`
@@ -42,5 +46,4 @@ It takes the following parameters in the querystring :
     * `0` to display brute data on the graph
     * `1` to scale the graph to 0 (he graph will display the difference between the values on a y-axis origin at 0.)
 
-    > Example    
-    `stat.html?source=uptime.csv&scale=1&label=test&color=%23FF0000`
+
