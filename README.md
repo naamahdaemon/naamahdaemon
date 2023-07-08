@@ -15,7 +15,7 @@ The `csv` file can count whatever data you want. It is up to you to generate and
 
 > Example    
 > I use this graph to monitor my Mina node server uptime.    
-> A shell script parse logs ono my server to generate date,ticks `csv` file. (this script is available to download here : https://github.com/naamahdaemon/mina-node-uptime-moniroring-script)    
+> A shell script parse logs on my server to generate date,ticks `csv` file. (this script is available to download here : https://github.com/naamahdaemon/mina-node-uptime-moniroring-script)    
 > This file is automatically uploaded to my web server each time it is updated    
 > Then I can display my uptime graph from my web server.    
 
