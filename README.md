@@ -46,4 +46,9 @@ It takes the following parameters in the querystring :
     * `0` to display brut data on the graph
     * `1` to scale the graph to 0 (he graph will display the difference between the values on a y-axis origin at 0.)
 
+## `index.html`
+The `index.html` page is a sample page displaying several graphs on the same page inside `iframe`
+You can modify the page and use it as is or ignore this page and make your own.
+
+
 
