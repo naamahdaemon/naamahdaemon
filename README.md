@@ -1,8 +1,7 @@
 # naamahdaemon.github.io
-Naamah GitHub Homepage
-
 Welcome to my GitHub !
 No big project here, no AI, no quantic computing, only little code snippets mostly dedicated to my own use.
+I use the page hosted here on my web server to display various graphs taking `csv` files as input.
 
 # Display graph from a csv file
 The simple html page hosted here allows to display simple graphs from CSV files.
@@ -11,6 +10,14 @@ An example is available on the github page of this project here : https://naamah
 
 # Installation
 Copy `stat.html`, `index.html` and your `csv` file to your web server.
+
+The `csv` file can count whatever data you want. It is up to you to generate and update the file so that your graph will be updated (in real time).
+
+> Example
+> I use this graph to monitor my Mina node server uptime.
+> A shell script parse logs ono my server to generate date,ticks `csv` file.
+> This file is automatically uploaded to my web server each time it is updated
+> Then I can display my uptime graph from my web server.
 
 ## `stat.html`
 The `stat.html` file displays a single CSV file.
