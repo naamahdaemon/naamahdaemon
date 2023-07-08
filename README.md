@@ -17,19 +17,19 @@ The `stat.html` file displays a single CSV file.
 It takes the following parameters in the querystring :
 
 * `source`
- source csv file to display graph from. Format of the csv file should be :
- ```
- Time, Score
- YYYY-MM-DD HH:MM:SS, <SCORE>
- ```
+    source csv file to display graph from. Format of the csv file should be :
+    ```
+    Time, Score
+    YYYY-MM-DD HH:MM:SS, <SCORE>
+    ```
 
 > Example
-```
-Time,Score
-2023-05-01 00:00:00,91
-2023-05-02 00:00:00,96
-2023-05-03 00:00:00,96
-```
+    ```
+    Time,Score
+    2023-05-01 00:00:00,91
+    2023-05-02 00:00:00,96
+    2023-05-03 00:00:00,96
+    ```
  
 * `color`
 HTML color code (#XXXXXX) of the graph line.
