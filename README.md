@@ -36,12 +36,12 @@ It takes the following parameters in the querystring :
 
     > Example
 
-        ```
-        Time,Score
-        2023-05-01 00:00:00,91
-        2023-05-02 00:00:00,96
-        2023-05-03 00:00:00,96
-        ```
+    ```
+    Time,Score
+    2023-05-01 00:00:00,91
+    2023-05-02 00:00:00,96
+    2023-05-03 00:00:00,96
+    ```
  
 * `color`
     HTML color code (#XXXXXX) of the graph line.
