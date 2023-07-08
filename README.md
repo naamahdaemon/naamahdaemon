@@ -32,14 +32,14 @@ It takes the following parameters in the querystring :
     ```
  
 * `color`
-HTML color code (#XXXXXX) of the graph line.
+    HTML color code (#XXXXXX) of the graph line.
 
 * `label`
-Label of the graph
+    Label of the graph
 
 * `scale`
-`0` to display brute data on the graph
-`1` to scale the graph to 0 (he graph will display the difference between the values on a y-axis origin at 0.)
+    `0` to display brute data on the graph 
+    `1` to scale the graph to 0 (he graph will display the difference between the values on a y-axis origin at 0.)
 
-> Example
-> `stat.html?source=uptime.csv&scale=1&label=test&color=%23FF0000`
+    > Example 
+    > `stat.html?source=uptime.csv&scale=1&label=test&color=%23FF0000`
