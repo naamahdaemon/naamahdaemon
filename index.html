@@ -173,7 +173,9 @@
             resizeC(colSel.options[colSel.selectedIndex].text);
             resizeL(lineSel.options[lineSel.selectedIndex].text)
            var links = document.getElementsByClassName('ref');
-            var myString = "&filter="+filter;
+	var myString = "";
+	   if (filter===1)
+            	myString = "&filter="+filter;
 
             for (var i = 0; i < links.length; i++) {
                 var href = links[i].getAttribute('href');
@@ -181,7 +183,6 @@
             }
 
             links = document.getElementsByClassName('frameref');
-            myString = "&filter="+filter;
 
             for (var i = 0; i < links.length; i++) {
             var src = links[i].getAttribute('src');
