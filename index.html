@@ -68,8 +68,34 @@
             iframe {
                 height: 93%;
             }
+            #ref {
+
+            }
+
+            #frameref {
+
+            }				  
         </style>
 	<script>
+		const queryParams = new URLSearchParams(window.location.search);
+		var colonne = queryParams.get('colonne'); 
+		
+		if (colonne === null) {
+		  colonne = 1;
+		} 
+		var ligne = queryParams.get('ligne'); 
+		
+		if (ligne === null) {
+		  ligne = 1;
+		} 
+
+		var filter = queryParams.get('filter'); 
+		
+		if (filter === null) {
+		  filter = 0;
+		} else {
+            filter = 1;
+        }																								   
 		function resizeC(nombre){
 		    var taille = 100 / nombre;
 		    var strTaille = taille + "%";
@@ -127,12 +153,12 @@
 	        <div class="singlepagecontainer">
 			    <div id="controllercontainer">
 	                <div class="part top left colorborder">
-	                  <div class="subpart"><a href="stat.html?source=uptime.csv" target=_blank>uptime</a></div>
-	                    <iframe src="stat.html?source=uptime.csv" height="100%" width="100%" allowfullscreen="true"></iframe>
+	                  <div class="subpart"><a class="ref" href="stat.html?source=uptime.csv" target=_blank>uptime</a></div>
+	                    <iframe class="frameref" src="stat.html?source=uptime.csv" height="100%" width="100%" allowfullscreen="true"></iframe>
 	                  </div>
 	                <div class="part top left colorborder">
-	                  <div class="subpart"><a href="stat.html?source=uptime.csv" target=_blank>uptime2</a></div>
-	                            <iframe src="stat.html?source=uptime.csv" height="100%" width="100%" allowfullscreen="true"></iframe>
+	                  <div class="subpart"><a class="ref" href="stat.html?source=uptime.csv" target=_blank>uptime2</a></div>
+	                            <iframe class="frameref" src="stat.html?source=uptime.csv" height="100%" width="100%" allowfullscreen="true"></iframe>
 	                  </div>
 	                </div>
 	        </div>
@@ -142,6 +168,21 @@
             var lineSel = document.getElementById("line");
             resizeC(colSel.options[colSel.selectedIndex].text);
             resizeL(lineSel.options[lineSel.selectedIndex].text)
+           var links = document.getElementsByClassName('ref');
+            var myString = "&filter="+filter;
+
+            for (var i = 0; i < links.length; i++) {
+                var href = links[i].getAttribute('href');
+                links[i].setAttribute('href', href + myString);
+            }
+
+            links = document.getElementsByClassName('frameref');
+            myString = "&filter="+filter;
+
+            for (var i = 0; i < links.length; i++) {
+            var src = links[i].getAttribute('src');
+            links[i].setAttribute('src', src + myString);
+            }															   
         </script>
     </body>
 </html>
