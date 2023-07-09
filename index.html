@@ -1,6 +1,9 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale:1">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	  <!-- highlight.js CSS -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/styles/default.min.css">
 	<link href="styles/style.css" rel="stylesheet">    
         <style>
             .wrapper {
@@ -86,7 +89,7 @@
 	</script>		 
     </head>
     <body>
-	<div id="content"></div>
+	<div id="content" class="container-sm" data-bs-theme="dark"></div>
 	<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 	<script>
 	  // Fetch the Markdown file
@@ -103,35 +106,37 @@
 	</script>
 	<br/>
 	<hr/>
-	<h1>Example : Rendering of 2 graphs based on uptime.csv file</h1>
-	Columns :
-	<select id=col onChange='resizeC(this.value);'>
-		<option selected>1</option>
-		<option>2</option>
-		<option>3</option>
-		<option>4</option>
-
-	</select>
-	Lines :
-	<select id=line onChange='resizeL(this.value);'>
-		<option selected>1</option>
-		<option>2</option>
-		<option>3</option>
-		<option>4</option>
-
-	</select>		  
-        <div class="singlepagecontainer">
-		    <div id="controllercontainer">
-                <div class="part top left colorborder">
-                  <div class="subpart"><a href="stat.html?source=uptime.csv" target=_blank>uptime</a></div>
-                    <iframe src="stat.html?source=uptime.csv" height="100%" width="100%" allowfullscreen="true"></iframe>
-                  </div>
-                <div class="part top left colorborder">
-                  <div class="subpart"><a href="stat.html?source=uptime.csv" target=_blank>uptime2</a></div>
-                            <iframe src="stat.html?source=uptime.csv" height="100%" width="100%" allowfullscreen="true"></iframe>
-                  </div>
-                </div>
-        </div>
+	<div class="container-sm" data-bs-theme="dark">
+		<h1>Example : Rendering of 2 graphs based on uptime.csv file</h1>
+		Columns :
+		<select id=col onChange='resizeC(this.value);'>
+			<option selected>1</option>
+			<option>2</option>
+			<option>3</option>
+			<option>4</option>
+	
+		</select>
+		Lines :
+		<select id=line onChange='resizeL(this.value);'>
+			<option selected>1</option>
+			<option>2</option>
+			<option>3</option>
+			<option>4</option>
+	
+		</select>		  
+	        <div class="singlepagecontainer">
+			    <div id="controllercontainer">
+	                <div class="part top left colorborder">
+	                  <div class="subpart"><a href="stat.html?source=uptime.csv" target=_blank>uptime</a></div>
+	                    <iframe src="stat.html?source=uptime.csv" height="100%" width="100%" allowfullscreen="true"></iframe>
+	                  </div>
+	                <div class="part top left colorborder">
+	                  <div class="subpart"><a href="stat.html?source=uptime.csv" target=_blank>uptime2</a></div>
+	                            <iframe src="stat.html?source=uptime.csv" height="100%" width="100%" allowfullscreen="true"></iframe>
+	                  </div>
+	                </div>
+	        </div>
+	</div>
         <script>
             var colSel = document.getElementById("col");
             var lineSel = document.getElementById("line");
