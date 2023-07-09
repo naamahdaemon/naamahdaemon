@@ -1,3 +1,27 @@
+	 
+						  
+				 
+					   
+			  
+							  
+				   
+									
+			   
+		 
+								
+					
+					
+				 
+		  
+					
+					 
+				  
+	 
+   
+
+									   
+														   
+  
 <html>
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
@@ -47,6 +71,7 @@
             align-items: stretch;
 			overflow: auto;
 			height: 95%;
+						 
 			//overflow-y: hidden;			
         }		
 		.buttonbar > * {
@@ -69,17 +94,30 @@
 		var scale = queryParams.get('scale'); 
 		if (scale === null) {
 		  scale = 0;
+									   
+								 
+													   
+												   
+							   
+																	   
+																						  
+																								   
 		} else {
 		  scale = 1;
 		}
 		var source = queryParams.get('source'); 
 		var color = queryParams.get('color'); 
 		var label = queryParams.get('label'); 
+		var filter = queryParams.get('filter'); 
+		
 		if (color === null) {
 		  color = "#3e95cd";
 		} 
 		if (label === null) {
 		  label = "Uptime Ticks";
+		} 
+		if (filter === null) {
+		  filter = 0;
 		} 
 		console.log(scale); 
 		console.log(source); 
@@ -92,14 +130,40 @@
 		var day = currentDate.getDate().toString().padStart(2, '0');
 		var formattedDate = year + '-' + month + '-' + day;
 		console.log(formattedDate);
+		
+		function showhide() {
+			var filterp = document.getElementById("filterpanel"); 
+			var chart = document.getElementById("chart"); 
+			
+			if (filterp.style.display==='none'){
+				filterp.style.display='flex';
+				//filterp.style.height=filterp.offsetHeight + 'px';
+				//chart.style.height=chart.offsetHeight + 'px';
+				chart.style.height = '95%';
+				//// Trigger reflow by detaching and reattaching the div to the DOM
+				chart.parentNode.insertBefore(chart, chart.nextSibling);
+				filterp.parentNode.insertBefore(filterp, filterp.nextSibling);
+			} else {
+				filterp.style.display='none';
+				//filterp.style.height=0;
+				chart.style.height="95%";
+				//chart.style.height = 'auto';
+				//// Trigger reflow by detaching and reattaching the div to the DOM
+				chart.parentNode.insertBefore(chart, chart.nextSibling);
+					  
+			}
+			window.dispatchEvent(new Event('resize'));
+			document.body.style.transform = 'scale(1.0)';
+		}
 	</script>
 </head>
 <body>
+	<button class="w3-button w3-black w3-hover-red" onclick="showhide();">filter pannel</button>																							 
 	<div id="wrapper">
-		<div class="chart">
+		<div id="chart" class="chart">
 			<canvas id="line-chart"></canvas>
 		</div>
-		<div class="buttoncontainer1">
+		<div id="filterpanel" class="buttoncontainer1">
 				<div class="buttonbar">			  							   
 					<button class="w3-button w3-black w3-hover-red" onclick="sda(-1);sea(-1);"><</button>
 					<button class="w3-button w3-black w3-hover-red" style="background-color:rgb(120,120,255);" onclick="TodayDate()">Day</button>
@@ -337,6 +401,14 @@
 		  });
 
 		fetchCSV(); // First fetch!
+			 
+		if (filter===0)
+			showhide();
+		  
+				   
+			 
+			 
+		  
 	</script>
 </body>
 </html>
