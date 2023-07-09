@@ -166,6 +166,10 @@
         <script>
             var colSel = document.getElementById("col");
             var lineSel = document.getElementById("line");
+		
+            colSel.selectedIndex = colonne-1;
+            lineSel.selectedIndex = ligne-1;
+		
             resizeC(colSel.options[colSel.selectedIndex].text);
             resizeL(lineSel.options[lineSel.selectedIndex].text)
            var links = document.getElementsByClassName('ref');
