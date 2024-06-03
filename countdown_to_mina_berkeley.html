@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mina Berkeley Upgrade</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+    
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #282c34;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start; /* Change to flex-start */
+      height: 100%;
+      margin: 0;
+      padding: 20px; /* Add some padding */
+    }
+    h1, h2 {
+      margin: 20px 0;
+    }
+    p {
+      margin: 5px 0;
+    }
+    table {
+      margin: 20px 0;
+      border-collapse: collapse;
+      width: 100%; /* Adjust to full width */
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+    th {
+      background-color: #4CAF50;
+      color: white;
+    }
+    td {
+      text-align: left;
+    }
+    td.legend {
+      text-align: right;
+    }
+    td.value {
+      background-color: black;
+      color: white;
+    }
+    .digital-watch {
+      font-size: 3em;
+      font-family: 'Orbitron', sans-serif;
+      background-color: #000;
+      padding: 10px 20px;
+      border-radius: 5px;
+      display: block;
+      width:100%;
+      color: #00FF00; /* Green text to mimic old digital watches */
+    }
+
+    .digital-watch3 {
+      font-size: 3em; /* Adjusted for better mobile view */
+      font-family: 'Orbitron', sans-serif;
+      background-color: #000;
+      padding: 10px 20px;
+      border-radius: 5px;
+      display: inline-block;
+      color: #00FF00; /* Green text to mimic old digital watches */
+    }
+    
+    .digital-watch2 {
+      font-size: 2em; /* Adjusted for better mobile view */
+      font-family: 'Orbitron', sans-serif;
+      //background-color: #000;
+      padding: 10px 20px;
+      border-radius: 5px;
+      display: inline-block;
+      color: #00FF00; /* Green text to mimic old digital watches */
+    }    
+    
+    @media (max-width: 600px) {
+      .digital-watch, .digital-watch2, .digital-watch3 {
+        font-size: 1.5em; /* Adjust font size for smaller screens */
+      }
+      table {
+        width: 100%;
+      }
+      td.legend {
+        font-size: 0.8em;
+      }
+      td.value {
+        font-size: 0.8em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Current Date and Time</h1>
+  <p id="time" class="digital-watch2"></p>
+
+  <h2>BLOCKCHAIN INFORMATION</h2>
+  <div id="graphql-data">
+    <p>Loading...</p>
+  </div>
+
+  <h2>NUMBER OF SLOTS BEFORE STOP TRANSACTION SLOT (564180)</h2>
+  <p id="countdown-transaction" class="digital-watch3">Loading...</p>
+  <p id="time-transaction" class="digital-watch2">Loading...</p>
+  <p>
+    <b>STOP TRANSACTION SLOT SHOULD HAPPEN ON JUNE, 4th 09H00 UTC</b><br/>
+    When STOP TRANSACTION SLOT is reached, no more transactions will be included in produced blocks.
+  </p>
+
+  <h2>NUMBER OF SLOTS BEFORE STOP NETWORK SLOT (564280)</h2>
+  <p id="countdown-network"  class="digital-watch3">Loading...</p>
+  <p id="time-network" class="digital-watch2">Loading...</p>  
+  <p>
+    <b>STOP NETWORK SLOT SHOULD HAPPEN ON JUNE, 4th 14H00 UTC</b><br/>
+    When STOP NETWORK SLOT is reached, blockchain will be completely stopped until it is restarted on Berkeley 6 hours later with the first nodes joining the network.<br/>
+    <b>NETWORK RESTART ON BERKELEY SHOULD HAPPEN FROM JUNE, 4th 20H00 UTC UNTIL JUNE, 5th 00:00 UTC</b><br/>
+    <h1>FIRST BERKELEY BLOCK SHOULD BE PRODUCED ON JUNE, 5th 00:00 UTC</h1><br/>
+  </p>  
+
+  <script>
+    const targetSlotTransaction = 564180;
+    const targetSlotNetwork = 564280;
+
+    const fetchGraphQLData = async () => {
+      const query = `
+        query MyQuery {
+          blocks(sortBy: DATETIME_DESC, limit: 1) {
+            protocolState {
+              consensusState {
+                epoch
+                blockHeight
+                blockchainLength
+                slotSinceGenesis
+              }
+            }
+          }
+        }
+      `;
+
+      const response = await fetch('https://graphql.minaexplorer.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ query })
+      });
+
+      const result = await response.json();
+      return result.data.blocks[0].protocolState.consensusState;
+    };
+
+    const updateTime = () => {
+      const now = new Date();
+      document.getElementById('time').textContent = now.toLocaleTimeString();
+    };
+
+    const updateGraphQLData = async () => {
+      const data = await fetchGraphQLData();
+      const dataContainer = document.getElementById('graphql-data');
+      dataContainer.innerHTML = `
+        <table>
+          <tr>
+            <td class="legend">Epoch</td>
+            <td class="value digital-watch">${data.epoch}</td>
+          </tr>
+          <tr>
+            <td class="legend">Block Height</td>
+            <td class="value digital-watch">${data.blockHeight}</td>
+          </tr>
+          <tr>
+            <td class="legend ">Blockchain Length</td>
+            <td class="value digital-watch">${data.blockchainLength}</td>
+          </tr>
+          <tr>
+            <td class="legend">Slot Since Genesis</td>
+            <td class="value digital-watch">${data.slotSinceGenesis}</td>
+          </tr>
+        </table>
+      `;
+
+      const slotsRemainingTransaction = targetSlotTransaction - data.slotSinceGenesis;
+      document.getElementById('countdown-transaction').textContent = slotsRemainingTransaction;
+      
+      const timeRemainingTransaction = (targetSlotTransaction - data.slotSinceGenesis)*3;
+      var hours = Math.floor(timeRemainingTransaction / 60); // Get the number of whole hours
+      var minutes = timeRemainingTransaction % 60; // Get the remaining minutes
+      var seconds = 0; // Initially assuming seconds are 0, as the given value represents only minutes     
+      const formattedTime = `WILL BE REACHED IN ${hours}H${minutes.toString().padStart(2, '0')}M`;      
+      document.getElementById('time-transaction').textContent = formattedTime;      
+
+      const slotsRemainingNetwork = targetSlotNetwork - data.slotSinceGenesis;
+      document.getElementById('countdown-network').textContent = slotsRemainingNetwork;
+      
+      const timeRemainingNetwork = (slotsRemainingNetwork)*3;
+      hours = Math.floor(timeRemainingNetwork / 60); // Get the number of whole hours
+      minutes = timeRemainingNetwork % 60; // Get the remaining minutes
+      seconds = 0; // Initially assuming seconds are 0, as the given value represents only minutes     
+      const NetworkformattedTime = `WILL BE REACHED IN ${hours}H${minutes.toString().padStart(2, '0')}M`;      
+      document.getElementById('time-network').textContent = NetworkformattedTime;        
+      
+    };
+
+    setInterval(updateTime, 1000); // Update time every second
+    setInterval(updateGraphQLData, 60000); // Fetch data every minute
+
+    // Initial load
+    updateTime();
+    updateGraphQLData();
+  </script>
+</body>
+</html>
