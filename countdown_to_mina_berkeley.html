@@ -105,19 +105,17 @@
     <p>Loading...</p>
   </div>
 
-  <h2>NUMBER OF SLOTS BEFORE STOP TRANSACTION SLOT (564180)</h2>
+  <h2>STOP TRANSACTION SLOT (564180) REACHED</h2>
   <p id="countdown-transaction" class="digital-watch3">Loading...</p>
-  <p id="time-transaction" class="digital-watch2">Loading...</p>
   <p>
-    <b>STOP TRANSACTION SLOT SHOULD HAPPEN ON JUNE, 4th 09H00 UTC</b><br/>
+    <b>STOP TRANSACTION SLOT SHOULD HAPPENNED ON JUNE, 4th 09H00 UTC</b><br/>
     When STOP TRANSACTION SLOT is reached, no more transactions will be included in produced blocks.
   </p>
 
-  <h2>NUMBER OF SLOTS BEFORE STOP NETWORK SLOT (564280)</h2>
+  <h2>STOP NETWORK SLOT (564280) REACHED</h2>
   <p id="countdown-network"  class="digital-watch3">Loading...</p>
-  <p id="time-network" class="digital-watch2">Loading...</p>  
   <p>
-    <b>STOP NETWORK SLOT SHOULD HAPPEN ON JUNE, 4th 14H00 UTC</b><br/>
+    <b>STOP NETWORK SLOT HAPPENNED ON JUNE, 4th 14H00 UTC</b><br/>
     When STOP NETWORK SLOT is reached, blockchain will be completely stopped until it is restarted on Berkeley 6 hours later with the first nodes joining the network.<br/>
     <b>NETWORK RESTART ON BERKELEY SHOULD HAPPEN FROM JUNE, 4th 20H00 UTC UNTIL JUNE, 5th 00:00 UTC</b><br/>
     <h1>FIRST BERKELEY BLOCK SHOULD BE PRODUCED ON JUNE, 5th 00:00 UTC</h1><br/>
@@ -181,24 +179,24 @@
       `;
 
       const slotsRemainingTransaction = targetSlotTransaction - data.slotSinceGenesis;
-      document.getElementById('countdown-transaction').textContent = slotsRemainingTransaction;
+      document.getElementById('countdown-transaction').textContent = "✅";
       
       const timeRemainingTransaction = (targetSlotTransaction - data.slotSinceGenesis)*3;
       var hours = Math.floor(timeRemainingTransaction / 60); // Get the number of whole hours
       var minutes = timeRemainingTransaction % 60; // Get the remaining minutes
       var seconds = 0; // Initially assuming seconds are 0, as the given value represents only minutes     
       const formattedTime = `WILL BE REACHED IN ${hours}H${minutes.toString().padStart(2, '0')}M`;      
-      document.getElementById('time-transaction').textContent = formattedTime;      
+      //document.getElementById('time-transaction').textContent = formattedTime;      
 
       const slotsRemainingNetwork = targetSlotNetwork - data.slotSinceGenesis;
-      document.getElementById('countdown-network').textContent = slotsRemainingNetwork;
+      document.getElementById('countdown-network').text content="✅";
       
       const timeRemainingNetwork = (slotsRemainingNetwork)*3;
       hours = Math.floor(timeRemainingNetwork / 60); // Get the number of whole hours
       minutes = timeRemainingNetwork % 60; // Get the remaining minutes
       seconds = 0; // Initially assuming seconds are 0, as the given value represents only minutes     
       const NetworkformattedTime = `WILL BE REACHED IN ${hours}H${minutes.toString().padStart(2, '0')}M`;      
-      document.getElementById('time-network').textContent = NetworkformattedTime;        
+      //document.getElementById('time-network').textContent = NetworkformattedTime;        
       
     };
 
