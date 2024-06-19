@@ -101,7 +101,7 @@
   </div>
 
   <h1>Delegate to my validator</h1>
-  <img src="naamah_bp_qrcode.png" alt="QR Code" style="width: 20%; height: auto;">
+  <img src="./naamah_bp_qrcode.png" alt="QR Code" style="width: 20%; height: auto;">
   <br/><br/>
   <div class="addresse">B62qpsyB3gCndt8sNz4GRwusBtg9U72TNiL4mxmcQfWKZ5noa9fFnWr</div>
 
@@ -175,7 +175,7 @@
 
     const updateGraphQLData = async () => {
       const data = await fetchGraphQLData();
-      const remainingMinutes = 7140 - data.slot;
+      const remainingMinutes = (7140 - data.slot - 1)*3;
 
       const time = convertMinutesToTime(remainingMinutes);
       const dataContainer = document.getElementById('graphql-data');
