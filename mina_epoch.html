@@ -30,7 +30,7 @@
       margin: 20px 0;
       border-collapse: collapse;
       width: 100%;
-      max-width: 600px; /* Limit table width for better readability on larger screens */
+      max-width: 700px; /* Limit table width for better readability on larger screens */
     }
     th, td {
       border: 1px solid #ddd;
@@ -79,7 +79,7 @@
     }
     @media (max-width: 800px) {
       .digital-watch, .digital-watch2, .digital-watch3 {
-        font-size: 1.5em; /* Adjust font size for smaller screens */
+        font-size: 1.2em; /* Adjust font size for smaller screens */
       }
       table {
         width: 100%;
@@ -204,11 +204,11 @@
             <td class="value digital-watch blanc">${data.slotSinceGenesis}</td>
           </tr>
           <tr>
-            <td class="legend">Remaining time in epoch (approx.) </td>
+            <td class="legend">Remaining time in epoch</td>
             <td class="value digital-watch vert">${timeleft}</td>
           </tr>
           <tr>
-            <td class="legend">Epoch ${data.epoch} will end on (approx.) </td>
+            <td class="legend">Epoch ${data.epoch} will end on</td>
             <td class="value digital-watch vert">${formattedFutureDateTime}</td>
           </tr>
         </table>
