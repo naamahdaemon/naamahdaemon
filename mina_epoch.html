@@ -15,10 +15,10 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start; /* Change to flex-start */
+      justify-content: flex-start;
       height: 100%;
       margin: 0;
-      padding: 20px; /* Add some padding */
+      padding: 20px;
     }
     h1, h2 {
       margin: 20px 0;
@@ -29,7 +29,8 @@
     table {
       margin: 20px 0;
       border-collapse: collapse;
-      width: 100%; /* Adjust to full width */
+      width: 100%;
+      max-width: 1000px; /* Limit table width for better readability on larger screens */
     }
     th, td {
       border: 1px solid #ddd;
@@ -47,85 +48,41 @@
     }
     td.value {
       background-color: black;
-      //color: white;
     }
-    .digital-watch {
+    .digital-watch, .digital-watch2, .digital-watch3 {
       font-size: 3em;
       font-family: 'Orbitron', sans-serif;
       background-color: #000;
       padding: 10px 20px;
       border-radius: 5px;
       display: block;
-      width:100%;
-      //color: #00FF00; /* Green text to mimic old digital watches */
+      width: 100%;
+      color: #00FF00; /* Green text to mimic old digital watches */
     }
-
     .addresse {
       font-size: 1em;
       font-family: 'Orbitron', sans-serif;
-      //background-color: #000;
       padding: 10px 20px;
       border-radius: 5px;
       display: block;
-      //width:100%;
-      color: #FFFFFF; /* Green text to mimic old digital watches */
+      color: #FFFFFF;
     }
-    
     .blanc {
       color: #FFFFFF;
     }
-
     .vert {
       color: #00FF00;
     }
-      
-
-    .digital-watch3 {
-      font-size: 3em; /* Adjusted for better mobile view */
-      font-family: 'Orbitron', sans-serif;
-      background-color: #000;
-      padding: 10px 20px;
-      border-radius: 5px;
-      display: inline-block;
-      color: #00FF00; /* Green text to mimic old digital watches */
-    }
-
-    .titre {
-      font-size: 3em; /* Adjusted for better mobile view */
-      font-family: 'Orbitron', sans-serif;
-      background-color: #000;
-      padding: 10px 20px;
-      border-radius: 5px;
-      //display: inline-block;
-      color: #00FF00; /* Green text to mimic old digital watches */
-    }
-
-    .green_color {
-      color: #00FF00; /* Green text to mimic old digital watches */
-    }
-    
-    .digital-watch2 {
-      font-size: 3em; /* Adjusted for better mobile view */
-      font-family: 'Orbitron', sans-serif;
-      //background-color: #000;
-      padding: 10px 20px;
-      border-radius: 5px;
-      display: inline-block;
-      color: #00FF00; /* Green text to mimic old digital watches */
-    }    
-    
     @media (max-width: 600px) {
       .digital-watch, .digital-watch2, .digital-watch3 {
         font-size: 1.5em; /* Adjust font size for smaller screens */
       }
       table {
         width: 100%;
+        max-width: 100%; /* Ensure table occupies full width on smaller screens */
       }
-      td.legend {
-        font-size: 0.8em;
-      }
-      td.value {
-        font-size: 0.8em;
+      td.legend, td.value {
+        font-size: 0.8em; /* Adjust font size of table cells for smaller screens */
       }
     }
   </style>
@@ -140,18 +97,14 @@
   </div>
 
   <h1>Delegate to my validator</h1>
-  <img src=./naamah_bp_qrcode.png width=20% heigth=20%/>
+  <img src="./naamah_bp_qrcode.png" alt="QR Code" style="width: 20%; height: auto;">
   <br/><br/>
-  <div class=addresse>B62qpsyB3gCndt8sNz4GRwusBtg9U72TNiL4mxmcQfWKZ5noa9fFnWr</div>
+  <div class="addresse">B62qpsyB3gCndt8sNz4GRwusBtg9U72TNiL4mxmcQfWKZ5noa9fFnWr</div>
 
   <h1>Visit my website for more information</h1>
-  <div class=addresse><a class=addresse href="https://mina.naamahdaemon.eu" target=_blank>https://mina.naamahdaemon.eu</a></div>
-
+  <div class="addresse"><a href="https://mina.naamahdaemon.eu" target="_blank" class="addresse">https://mina.naamahdaemon.eu</a></div>
 
   <script>
-    const targetSlotTransaction = 564180;
-    const targetSlotNetwork = 564280;
-
     const fetchGraphQLData = async () => {
       const query = `
         query MyQuery {
@@ -160,7 +113,6 @@
               consensusState {
                 epoch
                 blockHeight
-                blockchainLength
                 slot
                 slotSinceGenesis
               }
@@ -184,50 +136,51 @@
     const updateTime = () => {
       const now = new Date();
       const year = now.getFullYear();
-      const month = String(now.getMonth() + 1).padStart(2, '0'); // getMonth() returns 0-11, so add 1 and pad with 0 if needed
-      const day = String(now.getDate()).padStart(2, '0'); // pad with 0 if needed
-      const hours = String(now.getHours()).padStart(2, '0'); // pad with 0 if needed
-      const minutes = String(now.getMinutes()).padStart(2, '0'); // pad with 0 if needed
-      const seconds = String(now.getSeconds()).padStart(2, '0'); // pad with 0 if needed
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
 
       const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
       document.getElementById('time').textContent = formattedDateTime;
     };
 
     const convertMinutesToTime = (totalMinutes) => {
-        const minutesInADay = 1440; // 24 * 60
-        const minutesInAnHour = 60;
+      const minutesInADay = 1440;
+      const minutesInAnHour = 60;
 
-        const days = Math.floor(totalMinutes / minutesInADay);
-        const hours = Math.floor((totalMinutes % minutesInADay) / minutesInAnHour);
-        const minutes = Math.floor(totalMinutes % minutesInAnHour);
-        const seconds = 0; // Assuming we don't have fractional minutes
+      const days = Math.floor(totalMinutes / minutesInADay);
+      const hours = Math.floor((totalMinutes % minutesInADay) / minutesInAnHour);
+      const minutes = Math.floor(totalMinutes % minutesInAnHour);
+      const seconds = 0; // Assuming we don't have fractional minutes
 
-        return { days, hours, minutes, seconds };
+      return { days, hours, minutes, seconds };
     };
 
     const formatDateTime = (date) => {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth() returns 0-11, so add 1 and pad with 0 if needed
-        const day = String(date.getDate()).padStart(2, '0'); // pad with 0 if needed
-        const hours = String(date.getHours()).padStart(2, '0'); // pad with 0 if needed
-        const minutes = String(date.getMinutes()).padStart(2, '0'); // pad with 0 if needed
-        const seconds = String(date.getSeconds()).padStart(2, '0'); // pad with 0 if needed
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      const seconds = String(date.getSeconds()).padStart(2, '0');
 
-        return `${year}-${month}-${day} ${hours}:${minutes}`;
+      return `${year}-${month}-${day} ${hours}:${minutes}`;
     };
 
     const updateGraphQLData = async () => {
       const data = await fetchGraphQLData();
-      const remainingMinutes = (7140 - data.slot - 2)*3;
-      const time = convertMinutesToTime(remainingMinutes);      
+      const remainingMinutes = 7140 - data.slot;
+
+      const time = convertMinutesToTime(remainingMinutes);
       const dataContainer = document.getElementById('graphql-data');
       const timeleft = `${time.days}d, ${time.hours}h, ${time.minutes}m`;
-      
+
       const now = new Date();
       const futureDate = new Date(now.getTime() + remainingMinutes * 60000); // 60000 ms in a minute
       const formattedFutureDateTime = formatDateTime(futureDate);
-      
+
       dataContainer.innerHTML = `
         <table>
           <tr>
@@ -237,7 +190,7 @@
           <tr>
             <td class="legend">Slot in Epoch</td>
             <td class="value digital-watch blanc">${data.slot} / 7140</td>
-          </tr>          
+          </tr>
           <tr>
             <td class="legend">Block Height</td>
             <td class="value digital-watch blanc">${data.blockHeight}</td>
@@ -249,11 +202,11 @@
           <tr>
             <td class="legend">Remaining time in epoch (approx.) </td>
             <td class="value digital-watch vert">${timeleft}</td>
-          </tr>      
-        <tr>
-          <td class="legend">Epoch ${data.epoch} will end on (approx.) </td>
-          <td class="value digital-watch vert">${formattedFutureDateTime}</td>
-        </tr>          
+          </tr>
+          <tr>
+            <td class="legend">Epoch ${data.epoch} will end on (approx.) </td>
+            <td class="value digital-watch vert">${formattedFutureDateTime}</td>
+          </tr>
         </table>
       `;
     };
