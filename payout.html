@@ -151,7 +151,6 @@
 
         const auth = "my_secret";
         const apiUrl = "https://minataur.net/api/v1";
-        const proxyUrl = "http://www.akirion.com:4664/proxy?url=";
 
         const accountPayload = { auth, publicKey: publicKey3 };
         const delegatorsPayload = { auth, epoch: Number(epoch), publicKey: publicKey1, includeOrphanBlocks: false, beforeHardFork: false };
@@ -159,41 +158,35 @@
         const workPayload = { auth, epoch: Number(epoch), publicKey: publicKey1, includeOrphanBlocks: false, beforeHardFork: false };
         const workPayload2 = { auth, epoch: Number(epoch), publicKey: publicKey2, includeOrphanBlocks: false, beforeHardFork: false };
 
-        // Headers for the proxy request
-        const headers = {
-            'Content-Type': 'application/json',
-            'x-api-key': 'e0d9da01-c1c5-4c44-b4fa-3cbdb4982ed3'
-        };
-
         // Clear existing tables before populating
         clearTable('accountTable');
         clearTable('delegatorsTable');
         clearTable('delegatorsTable2');
 
         const [accountResponse, delegatorsResponse, workResponse, delegatorsResponse2, workResponse2] = await Promise.all([
-            fetch(proxyUrl + encodeURIComponent(`${apiUrl}/account`), {
+            fetch(`${apiUrl}/account`, {
                 method: 'POST',
-                headers,
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(accountPayload)
             }).then(res => res.json()),
-            fetch(proxyUrl + encodeURIComponent(`${apiUrl}/delegators`), {
+            fetch(`${apiUrl}/delegators`, {
                 method: 'POST',
-                headers,
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(delegatorsPayload)
             }).then(res => res.json()),
-            fetch(proxyUrl + encodeURIComponent(`${apiUrl}/work`), {
+            fetch(`${apiUrl}/work`, {
                 method: 'POST',
-                headers,
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(workPayload)
             }).then(res => res.json()),
-            fetch(proxyUrl + encodeURIComponent(`${apiUrl}/delegators`), {
+            fetch(`${apiUrl}/delegators`, {
                 method: 'POST',
-                headers,
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(delegatorsPayload2)
             }).then(res => res.json()),
-            fetch(proxyUrl + encodeURIComponent(`${apiUrl}/work`), {
+            fetch(`${apiUrl}/work`, {
                 method: 'POST',
-                headers,
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(workPayload2)
             }).then(res => res.json())
         ]);
