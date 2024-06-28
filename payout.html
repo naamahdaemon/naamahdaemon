@@ -169,42 +169,45 @@
         clearTable('accountTable');
         clearTable('delegatorsTable');
         clearTable('delegatorsTable2');
-
-        const [accountResponse, delegatorsResponse, workResponse, delegatorsResponse2, workResponse2] = await Promise.all([
-            fetch(proxyUrl + encodeURIComponent(`${apiUrl}/account`), {
-                method: 'POST',
-                headers,
-                body: JSON.stringify(accountPayload)
-            }).then(res => res.json()),
-            fetch(proxyUrl + encodeURIComponent(`${apiUrl}/delegators`), {
-                method: 'POST',
-                headers,
-                body: JSON.stringify(delegatorsPayload)
-            }).then(res => res.json()),
-            fetch(proxyUrl + encodeURIComponent(`${apiUrl}/work`), {
-                method: 'POST',
-                headers,
-                body: JSON.stringify(workPayload)
-            }).then(res => res.json()),
-            fetch(proxyUrl + encodeURIComponent(`${apiUrl}/delegators`), {
-                method: 'POST',
-                headers,
-                body: JSON.stringify(delegatorsPayload2)
-            }).then(res => res.json()),
-            fetch(proxyUrl + encodeURIComponent(`${apiUrl}/work`), {
-                method: 'POST',
-                headers,
-                body: JSON.stringify(workPayload2)
-            }).then(res => res.json())
-        ]);
-
-        populateAccountTable(accountResponse.payload.account);
-        if (showPublicKey3) {
-            populateDelegatorsTable(delegatorsResponse.payload.ledger, workResponse.payload.work, accountResponse.payload.account, 'delegatorsTable', publicKey3, showPublicKey3);
-            populateDelegatorsTable(delegatorsResponse2.payload.ledger, workResponse2.payload.work, accountResponse.payload.account, 'delegatorsTable2', publicKey3, showPublicKey3);
-        } else {
-            populateDelegatorsTable(delegatorsResponse.payload.ledger, workResponse.payload.work, accountResponse.payload.account, 'delegatorsTable', publicKey3);
-            populateDelegatorsTable(delegatorsResponse2.payload.ledger, workResponse2.payload.work, accountResponse.payload.account, 'delegatorsTable2', publicKey3);
+        try {
+            const [accountResponse, delegatorsResponse, workResponse, delegatorsResponse2, workResponse2] = await Promise.all([
+                fetch(proxyUrl + encodeURIComponent(`${apiUrl}/account`), {
+                    method: 'POST',
+                    headers,
+                    body: JSON.stringify(accountPayload)
+                }).then(res => res.json()),
+                fetch(proxyUrl + encodeURIComponent(`${apiUrl}/delegators`), {
+                    method: 'POST',
+                    headers,
+                    body: JSON.stringify(delegatorsPayload)
+                }).then(res => res.json()),
+                fetch(proxyUrl + encodeURIComponent(`${apiUrl}/work`), {
+                    method: 'POST',
+                    headers,
+                    body: JSON.stringify(workPayload)
+                }).then(res => res.json()),
+                fetch(proxyUrl + encodeURIComponent(`${apiUrl}/delegators`), {
+                    method: 'POST',
+                    headers,
+                    body: JSON.stringify(delegatorsPayload2)
+                }).then(res => res.json()),
+                fetch(proxyUrl + encodeURIComponent(`${apiUrl}/work`), {
+                    method: 'POST',
+                    headers,
+                    body: JSON.stringify(workPayload2)
+                }).then(res => res.json())
+            ]);
+    
+            populateAccountTable(accountResponse.payload.account);
+            if (showPublicKey3) {
+                populateDelegatorsTable(delegatorsResponse.payload.ledger, workResponse.payload.work, accountResponse.payload.account, 'delegatorsTable', publicKey3, showPublicKey3);
+                populateDelegatorsTable(delegatorsResponse2.payload.ledger, workResponse2.payload.work, accountResponse.payload.account, 'delegatorsTable2', publicKey3, showPublicKey3);
+            } else {
+                populateDelegatorsTable(delegatorsResponse.payload.ledger, workResponse.payload.work, accountResponse.payload.account, 'delegatorsTable', publicKey3);
+                populateDelegatorsTable(delegatorsResponse2.payload.ledger, workResponse2.payload.work, accountResponse.payload.account, 'delegatorsTable2', publicKey3);
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
         }
     }
 
