@@ -84,14 +84,15 @@
     <label for="fee1">Naamah's Fees</label>
     <input type="number" style="background-color:lightgrey" id="fee1" value=0.1 readonly><br>
 
-    <label for="publicKey2">Enter you current validator's address</label>
-    <input type="text" id="publicKey2"><br>
-
     <label for="fee2">Enter your validator's fee</label>
     <input type="number" id="fee2" value=0.5><br>
 
     <label for="publicKey3">Enter your public Key</label>
-    <input type="text" id="publicKey3">
+    <input type="text" id="publicKey3"><br/>
+    
+    <label for="publicKey2">Your current validator address</label>
+    <input type="text" id="publicKey2" style="background-color:lightgrey" readonly><br>    
+    
     <br/><br/>
     <input type="checkbox" id="showPublicKey3" checked onchange="fetchData()">Filter to display your public key only<br>
     <br/><br/>
@@ -138,78 +139,92 @@
     </table>
 
     <script>
-    async function fetchData() {
-        const epoch = document.getElementById('epoch').value;
-        const publicKey1 = document.getElementById('publicKey1').value;
-        const fee1 = document.getElementById('fee1').value;
-        const publicKey2 = document.getElementById('publicKey2').value;
-        const fee2 = document.getElementById('fee2').value;
-        const publicKey3 = document.getElementById('publicKey3').value;
-        const showPublicKey3 = document.getElementById('showPublicKey3').checked;
+async function fetchData() {
+    const epoch = document.getElementById('epoch').value;
+    const publicKey1 = document.getElementById('publicKey1').value;
+    const fee1 = document.getElementById('fee1').value;
+    let publicKey2Input = document.getElementById('publicKey2');  // Get reference to publicKey2 input element
+    let publicKey2 = publicKey2Input.value;  // Get current value of publicKey2 input field
+    const fee2 = document.getElementById('fee2').value;
+    const publicKey3 = document.getElementById('publicKey3').value;
+    const showPublicKey3 = document.getElementById('showPublicKey3').checked;
 
-        console.log(publicKey3);
+    const auth = "my_secret";
+    const apiUrl = "https://minataur.net/api/v1";
+    const proxyUrl = "https://www.akirion.com:4664/proxy?url=";
 
-        const auth = "my_secret";
-        const apiUrl = "https://minataur.net/api/v1";
-        const proxyUrl = "https://www.akirion.com:4664/proxy?url=";
+    const accountPayload = { auth, publicKey: publicKey3 };
+    const delegatorsPayload = { auth, epoch: Number(epoch), publicKey: publicKey1, includeOrphanBlocks: false, beforeHardFork: false };
+    let delegatorsPayload2;
 
-        const accountPayload = { auth, publicKey: publicKey3 };
-        const delegatorsPayload = { auth, epoch: Number(epoch), publicKey: publicKey1, includeOrphanBlocks: false, beforeHardFork: false };
-        const delegatorsPayload2 = { auth, epoch: Number(epoch), publicKey: publicKey2, includeOrphanBlocks: false, beforeHardFork: false };
-        const workPayload = { auth, epoch: Number(epoch), publicKey: publicKey1, includeOrphanBlocks: false, beforeHardFork: false };
-        const workPayload2 = { auth, epoch: Number(epoch), publicKey: publicKey2, includeOrphanBlocks: false, beforeHardFork: false };
+    // Headers for the proxy request
+    const headers = {
+        'Content-Type': 'application/json',
+        'x-api-key': 'e0d9da01-c1c5-4c44-b4fa-3cbdb4982ed3'
+    };
 
-        // Headers for the proxy request
-        const headers = {
-            'Content-Type': 'application/json',
-            'x-api-key': 'e0d9da01-c1c5-4c44-b4fa-3cbdb4982ed3'
-        };
+    // Clear existing tables before populating
+    clearTable('accountTable');
+    clearTable('delegatorsTable');
+    clearTable('delegatorsTable2');
+    try {
+        // Fetch account data first
+        const accountResponse = await fetch(proxyUrl + encodeURIComponent(`${apiUrl}/account`), {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(accountPayload)
+        }).then(res => res.json());
 
-        // Clear existing tables before populating
-        clearTable('accountTable');
-        clearTable('delegatorsTable');
-        clearTable('delegatorsTable2');
-        try {
-            const [accountResponse, delegatorsResponse, workResponse, delegatorsResponse2, workResponse2] = await Promise.all([
-                fetch(proxyUrl + encodeURIComponent(`${apiUrl}/account`), {
-                    method: 'POST',
-                    headers,
-                    body: JSON.stringify(accountPayload)
-                }).then(res => res.json()),
-                fetch(proxyUrl + encodeURIComponent(`${apiUrl}/delegators`), {
-                    method: 'POST',
-                    headers,
-                    body: JSON.stringify(delegatorsPayload)
-                }).then(res => res.json()),
-                fetch(proxyUrl + encodeURIComponent(`${apiUrl}/work`), {
-                    method: 'POST',
-                    headers,
-                    body: JSON.stringify(workPayload)
-                }).then(res => res.json()),
-                fetch(proxyUrl + encodeURIComponent(`${apiUrl}/delegators`), {
-                    method: 'POST',
-                    headers,
-                    body: JSON.stringify(delegatorsPayload2)
-                }).then(res => res.json()),
-                fetch(proxyUrl + encodeURIComponent(`${apiUrl}/work`), {
-                    method: 'POST',
-                    headers,
-                    body: JSON.stringify(workPayload2)
-                }).then(res => res.json())
-            ]);
-    
-            populateAccountTable(accountResponse.payload.account);
-            if (showPublicKey3) {
-                populateDelegatorsTable(delegatorsResponse.payload.ledger, workResponse.payload.work, accountResponse.payload.account, 'delegatorsTable', publicKey3, showPublicKey3);
-                populateDelegatorsTable(delegatorsResponse2.payload.ledger, workResponse2.payload.work, accountResponse.payload.account, 'delegatorsTable2', publicKey3, showPublicKey3);
-            } else {
-                populateDelegatorsTable(delegatorsResponse.payload.ledger, workResponse.payload.work, accountResponse.payload.account, 'delegatorsTable', publicKey3);
-                populateDelegatorsTable(delegatorsResponse2.payload.ledger, workResponse2.payload.work, accountResponse.payload.account, 'delegatorsTable2', publicKey3);
-            }
-        } catch (error) {
-            console.error('Error fetching data:', error);
+        // Update publicKey2 input field with delegate_key if it's empty
+        if (publicKey2 === '' || true) {
+            publicKey2 = accountResponse.payload.account.ledger.delegate_key;
+            publicKey2Input.value = publicKey2;  // Update the input field
         }
+
+        // Update delegatorsPayload2 with the correct publicKey2
+        delegatorsPayload2 = { auth, epoch: Number(epoch), publicKey: publicKey2, includeOrphanBlocks: false, beforeHardFork: false };
+
+        // Fetch all other necessary data
+        const [delegatorsResponse, workResponse, delegatorsResponse2, workResponse2] = await Promise.all([
+            fetch(proxyUrl + encodeURIComponent(`${apiUrl}/delegators`), {
+                method: 'POST',
+                headers,
+                body: JSON.stringify(delegatorsPayload)
+            }).then(res => res.json()),
+            fetch(proxyUrl + encodeURIComponent(`${apiUrl}/work`), {
+                method: 'POST',
+                headers,
+                body: JSON.stringify({ auth, epoch: Number(epoch), publicKey: publicKey1, includeOrphanBlocks: false, beforeHardFork: false })
+            }).then(res => res.json()),
+            fetch(proxyUrl + encodeURIComponent(`${apiUrl}/delegators`), {
+                method: 'POST',
+                headers,
+                body: JSON.stringify(delegatorsPayload2)
+            }).then(res => res.json()),
+            fetch(proxyUrl + encodeURIComponent(`${apiUrl}/work`), {
+                method: 'POST',
+                headers,
+                body: JSON.stringify({ auth, epoch: Number(epoch), publicKey: publicKey2, includeOrphanBlocks: false, beforeHardFork: false })
+            }).then(res => res.json())
+        ]);
+
+        // Populate tables with fetched data
+        populateAccountTable(accountResponse.payload.account);
+
+        if (showPublicKey3) {
+            populateDelegatorsTable(delegatorsResponse.payload.ledger, workResponse.payload.work, accountResponse.payload.account, 'delegatorsTable', publicKey3, showPublicKey3);
+            populateDelegatorsTable(delegatorsResponse2.payload.ledger, workResponse2.payload.work, accountResponse.payload.account, 'delegatorsTable2', publicKey3, showPublicKey3);
+        } else {
+            populateDelegatorsTable(delegatorsResponse.payload.ledger, workResponse.payload.work, accountResponse.payload.account, 'delegatorsTable', publicKey3);
+            populateDelegatorsTable(delegatorsResponse2.payload.ledger, workResponse2.payload.work, accountResponse.payload.account, 'delegatorsTable2', publicKey3);
+        }
+    } catch (error) {
+        console.error('Error fetching data:', error);
     }
+}
+
+
+
 
     function populateAccountTable(account) {
         const accountTable = document.getElementById('accountTable');
