@@ -110,6 +110,28 @@
         </tr>
     </table>
 
+    <h2>Naamah's Block Stats</h2>
+    <table id="delegator1Table">
+        <tr>
+            <th>Public Key</th>
+            <th>Blocks Produced</th>
+            <th>Rewards</th>
+            <th>Snarks Fee</th>
+            <th>Transactions Fee</th>
+        </tr>
+    </table>
+
+    <h2>Your Validator Block Stats</h2>
+    <table id="delegator2Table">
+        <tr>
+            <th>Public Key</th>
+            <th>Blocks Produced</th>
+            <th>Rewards</th>
+            <th>Snarks Fee</th>
+            <th>Transactions Fee</th>
+        </tr>
+    </table>
+
     <h2>Naamah's Validator</h2>
     <table id="delegatorsTable">
         <tr>
@@ -167,6 +189,8 @@ async function fetchData() {
     clearTable('accountTable');
     clearTable('delegatorsTable');
     clearTable('delegatorsTable2');
+    clearTable('delegator1Table');
+    clearTable('delegator2Table');
     try {
         // Fetch account data first
         const accountResponse = await fetch(proxyUrl + encodeURIComponent(`${apiUrl}/account`), {
@@ -218,119 +242,129 @@ async function fetchData() {
             populateDelegatorsTable(delegatorsResponse.payload.ledger, workResponse.payload.work, accountResponse.payload.account, 'delegatorsTable', publicKey3);
             populateDelegatorsTable(delegatorsResponse2.payload.ledger, workResponse2.payload.work, accountResponse.payload.account, 'delegatorsTable2', publicKey3);
         }
+
+        populateDelegatorTable('delegator1Table', workResponse.payload.work);
+        populateDelegatorTable('delegator2Table', workResponse2.payload.work);
+
     } catch (error) {
         console.error('Error fetching data:', error);
     }
 }
 
+function populateAccountTable(account) {
+    const accountTable = document.getElementById('accountTable');
+    const row = accountTable.insertRow();
+    row.insertCell(0).innerText = account.info.key;
+    row.insertCell(1).innerText = (Number(account.info.balance) / 1000000000).toFixed(4);
+    row.insertCell(2).innerText = account.ledger.delegate_key;
+}
 
+function populateDelegatorsTable(ledger, work, account, tableId, publicKey3, showPublicKey3) {
+    const delegatorsTable = document.getElementById(tableId);
+    const totalStake = (Number(ledger.stake) + Number(account.info.balance));
+    const totalRewards = (Number(work.rewards) + Number(work.transactions_fee)) / 1000000000;
 
+    // Add the third public key as a delegator only if it's not already in the list
+    const thirdDelegator = {
+        public_key: account.info.key,
+        balance: account.info.balance,
+        locked: false,
+        is_o1labs: account.info.is_o1labs,
+        is_found: account.info.is_found,
+        is_investor: account.info.is_investor
+    };
 
-    function populateAccountTable(account) {
-        const accountTable = document.getElementById('accountTable');
-        const row = accountTable.insertRow();
-        row.insertCell(0).innerText = account.info.key;
-        row.insertCell(1).innerText = (Number(account.info.balance) / 1000000000).toFixed(4);
-        row.insertCell(2).innerText = account.ledger.delegate_key;
+    if (!ledger.delegators.some(d => d.public_key === thirdDelegator.public_key)) {
+        // Add thirdDelegator to ledger.delegators
+        ledger.delegators.push(thirdDelegator);
     }
 
-    function populateDelegatorsTable(ledger, work, account, tableId, publicKey3, showPublicKey3) {
-        const delegatorsTable = document.getElementById(tableId);
-        const totalStake = (Number(ledger.stake) + Number(account.info.balance));
-        const totalRewards = (Number(work.rewards) + Number(work.transactions_fee)) / 1000000000;
+    // Sort the delegators array by balance in descending order
+    const sortedDelegators = ledger.delegators.sort((a, b) => Number(b.balance) - Number(a.balance));
 
-        // Add the third public key as a delegator only if it's not already in the list
-        const thirdDelegator = {
-            public_key: account.info.key,
-            balance: account.info.balance,
-            locked: false,
-            is_o1labs: account.info.is_o1labs,
-            is_found: account.info.is_found,
-            is_investor: account.info.is_investor
-        };
+    let totalBalance = 0;
+    let totalShares = 0;
+    let totalDueAmount = 0;
 
-        if (!ledger.delegators.some(d => d.public_key === thirdDelegator.public_key)) {
-            // Add thirdDelegator to ledger.delegators
-            ledger.delegators.push(thirdDelegator);
-        }
+    sortedDelegators.forEach(delegator => {
+        if (!showPublicKey3 || delegator.public_key === publicKey3) { // Check if publicKey3 is empty or matches current delegator.public_key
+            const row = delegatorsTable.insertRow();
+            row.insertCell(0).innerText = delegator.public_key;
+            row.insertCell(1).innerText = delegator.locked;
+            const balance = (Number(delegator.balance) / 1000000000).toFixed(4);
+            row.insertCell(2).innerText = balance;
+            totalBalance += parseFloat(balance);
 
-        // Sort the delegators array by balance in descending order
-        const sortedDelegators = ledger.delegators.sort((a, b) => Number(b.balance) - Number(a.balance));
+            const isO1labsCell = row.insertCell(3);
+            const isO1labsCheckbox = document.createElement('input');
+            isO1labsCheckbox.type = 'checkbox';
+            isO1labsCheckbox.checked = delegator.is_o1labs;
+            isO1labsCell.appendChild(isO1labsCheckbox);
 
-        let totalBalance = 0;
-        let totalShares = 0;
-        let totalDueAmount = 0;
+            const isFoundCell = row.insertCell(4);
+            const isFoundCheckbox = document.createElement('input');
+            isFoundCheckbox.type = 'checkbox';
+            isFoundCheckbox.checked = delegator.is_found;
+            isFoundCell.appendChild(isFoundCheckbox);
 
-        sortedDelegators.forEach(delegator => {
-            if (!showPublicKey3 || delegator.public_key === publicKey3) { // Check if publicKey3 is empty or matches current delegator.public_key
-                const row = delegatorsTable.insertRow();
-                row.insertCell(0).innerText = delegator.public_key;
-                row.insertCell(1).innerText = delegator.locked;
-                const balance = (Number(delegator.balance) / 1000000000).toFixed(4);
-                row.insertCell(2).innerText = balance;
-                totalBalance += parseFloat(balance);
+            const isInvestorCell = row.insertCell(5);
+            const isInvestorCheckbox = document.createElement('input');
+            isInvestorCheckbox.type = 'checkbox';
+            isInvestorCheckbox.checked = delegator.is_investor;
+            isInvestorCell.appendChild(isInvestorCheckbox);
 
-                const isO1labsCell = row.insertCell(3);
-                const isO1labsCheckbox = document.createElement('input');
-                isO1labsCheckbox.type = 'checkbox';
-                isO1labsCheckbox.checked = delegator.is_o1labs;
-                isO1labsCell.appendChild(isO1labsCheckbox);
+            const share = Number(delegator.balance) / Number(totalStake);
+            const sharePercent = (share * 100).toFixed(8);
+            row.insertCell(6).innerText = sharePercent;
+            totalShares += parseFloat(sharePercent);
 
-                const isFoundCell = row.insertCell(4);
-                const isFoundCheckbox = document.createElement('input');
-                isFoundCheckbox.type = 'checkbox';
-                isFoundCheckbox.checked = delegator.is_found;
-                isFoundCell.appendChild(isFoundCheckbox);
-
-                const isInvestorCell = row.insertCell(5);
-                const isInvestorCheckbox = document.createElement('input');
-                isInvestorCheckbox.type = 'checkbox';
-                isInvestorCheckbox.checked = delegator.is_investor;
-                isInvestorCell.appendChild(isInvestorCheckbox);
-
-                const share = Number(delegator.balance) / Number(totalStake);
-                const sharePercent = (share * 100).toFixed(8);
-                row.insertCell(6).innerText = sharePercent;
-                totalShares += parseFloat(sharePercent);
-
-                let totalDue = totalRewards * share;
-                if (delegator.is_found || delegator.is_investor) {
-                    totalDue *= 0.92;
-                } else if (delegator.is_o1labs) {
-                    totalDue *= 0.95;
-                } else {
-                    totalDue *= 0.99;
-                }
-                const totalDueRounded = totalDue.toFixed(4);
-                row.insertCell(7).innerText = totalDueRounded;
-                totalDueAmount += parseFloat(totalDueRounded);
-
-                if (publicKey3 && publicKey3 === delegator.public_key) {
-                    row.style.backgroundColor = 'yellow';
-                }
+            let totalDue = totalRewards * share;
+            if (delegator.is_found || delegator.is_investor) {
+                totalDue *= 0.92;
+            } else if (delegator.is_o1labs) {
+                totalDue *= 0.95;
+            } else {
+                totalDue *= 0.99;
             }
-        });
+            const totalDueRounded = totalDue.toFixed(4);
+            row.insertCell(7).innerText = totalDueRounded;
+            totalDueAmount += parseFloat(totalDueRounded);
 
-        // Add the total row
-        const totalRow = delegatorsTable.insertRow();
-        totalRow.insertCell(0).innerText = 'Total';
-        totalRow.insertCell(1).innerText = '';
-        totalRow.insertCell(2).innerText = totalBalance.toFixed(4);
-        totalRow.insertCell(3).innerText = '';
-        totalRow.insertCell(4).innerText = '';
-        totalRow.insertCell(5).innerText = '';
-        totalRow.insertCell(6).innerText = totalShares.toFixed(8);
-        totalRow.insertCell(7).innerText = totalDueAmount.toFixed(4);
-    }
-
-    function clearTable(tableId) {
-        const table = document.getElementById(tableId);
-        // Remove all rows except the header row
-        while (table.rows.length > 1) {
-            table.deleteRow(1);
+            if (publicKey3 && publicKey3 === delegator.public_key) {
+                row.style.backgroundColor = 'yellow';
+            }
         }
-    }
+    });
 
-    </script>
+    // Add the total row
+    const totalRow = delegatorsTable.insertRow();
+    totalRow.insertCell(0).innerText = 'Total';
+    totalRow.insertCell(1).innerText = '';
+    totalRow.insertCell(2).innerText = totalBalance.toFixed(4);
+    totalRow.insertCell(3).innerText = '';
+    totalRow.insertCell(4).innerText = '';
+    totalRow.insertCell(5).innerText = '';
+    totalRow.insertCell(6).innerText = totalShares.toFixed(8);
+    totalRow.insertCell(7).innerText = totalDueAmount.toFixed(4);
+}
+
+function populateDelegatorTable(tableId, work) {
+    const delegatorTable = document.getElementById(tableId);
+    const row = delegatorTable.insertRow();
+    row.insertCell(0).innerText = work.publicKey;
+    row.insertCell(1).innerText = work.count;
+    row.insertCell(2).innerText = (Number(work.rewards) / 1000000000).toFixed(4);
+    row.insertCell(3).innerText = (Number(work.snarks_fee) / 1000000000).toFixed(4);
+    row.insertCell(4).innerText = (Number(work.transactions_fee) / 1000000000).toFixed(4);
+}
+
+function clearTable(tableId) {
+    const table = document.getElementById(tableId);
+    // Remove all rows except the header row
+    while (table.rows.length > 1) {
+        table.deleteRow(1);
+    }
+}
+</script>
 </body>
 </html>
