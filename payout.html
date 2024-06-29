@@ -103,11 +103,11 @@
     <label for="publicKey1">Naamah's validator</label>
     <input type="text" id="publicKey1" value="B62qpsyB3gCndt8sNz4GRwusBtg9U72TNiL4mxmcQfWKZ5noa9fFnWr" style="background-color:lightgrey" readonly><br>
 
-    <label for="fee1">Naamah's Fees</label>
-    <input type="number" style="background-color:lightgrey" id="fee1" value=0.1 readonly><br>
+    <label for="fee1">Naamah's Fees (%)</label>
+    <input type="number" style="background-color:lightgrey" id="fee1" value=1 min="0" max="100" readonly><br>
 
-    <label for="fee2">Enter your validator's fee</label>
-    <input type="number" id="fee2" value=0.5 style="background-color:lightgrey" readonly><br>
+    <label for="fee2">Enter your validator's fee (%)</label>
+    <input type="number" id="fee2" value=5 value="5" min="0" max="100"><br>
 
     <label for="publicKey3">Enter your public Key</label>
     <input type="text" id="publicKey3"><br/>
@@ -285,11 +285,11 @@ async function fetchData() {
         populateAccountTable(accountResponse.payload.account);
 
         if (showPublicKey3) {
-            populateDelegatorsTable(delegatorsResponse.payload.ledger, workResponse.payload.work, accountResponse.payload.account, 'delegatorsTable', publicKey3, showPublicKey3);
-            populateDelegatorsTable(delegatorsResponse2.payload.ledger, workResponse2.payload.work, accountResponse.payload.account, 'delegatorsTable2', publicKey3, showPublicKey3);
+            populateDelegatorsTable(delegatorsResponse.payload.ledger, workResponse.payload.work, accountResponse.payload.account, 'delegatorsTable', publicKey3, showPublicKey3, fee1);
+            populateDelegatorsTable(delegatorsResponse2.payload.ledger, workResponse2.payload.work, accountResponse.payload.account, 'delegatorsTable2', publicKey3, showPublicKey3, fee2);
         } else {
-            populateDelegatorsTable(delegatorsResponse.payload.ledger, workResponse.payload.work, accountResponse.payload.account, 'delegatorsTable', publicKey3);
-            populateDelegatorsTable(delegatorsResponse2.payload.ledger, workResponse2.payload.work, accountResponse.payload.account, 'delegatorsTable2', publicKey3);
+            populateDelegatorsTable(delegatorsResponse.payload.ledger, workResponse.payload.work, accountResponse.payload.account, 'delegatorsTable', publicKey3, false, fee1);
+            populateDelegatorsTable(delegatorsResponse2.payload.ledger, workResponse2.payload.work, accountResponse.payload.account, 'delegatorsTable2', publicKey3, false, fee2);
         }
 
         populateDelegatorTable('delegator1Table', workResponse.payload.work);
@@ -308,7 +308,7 @@ function populateAccountTable(account) {
     row.insertCell(2).innerText = account.ledger.delegate_key;
 }
 
-function populateDelegatorsTable(ledger, work, account, tableId, publicKey3, showPublicKey3) {
+function populateDelegatorsTable(ledger, work, account, tableId, publicKey3, showPublicKey3, fee) {
     const delegatorsTable = document.getElementById(tableId);
     //const totalStake = (Number(ledger.stake) + Number(account.info.balance));
     
@@ -380,7 +380,7 @@ function populateDelegatorsTable(ledger, work, account, tableId, publicKey3, sho
             } else if (delegator.is_o1labs) {
                 totalDue *= 0.95;
             } else {
-                totalDue *= 0.99;
+                totalDue *= (100-fee)/100;
             }
             const totalDueRounded = totalDue.toFixed(4);
             row.insertCell(7).innerText = totalDueRounded;
