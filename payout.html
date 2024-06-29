@@ -113,7 +113,7 @@
     <input type="text" id="publicKey3"><br/>
     
     <label for="publicKey2">Your current validator address</label>
-    <input type="text" id="publicKey2" style="background-color:lightgrey" readonly><br>    
+    <input type="text" id="publicKey2" style="background-color:lightgrey"><br>    
     
     <br/><br/>
     <input type="checkbox" id="showPublicKey3" checked onchange="fetchData()">Filter to display your public key only<br>
@@ -249,7 +249,7 @@ async function fetchData() {
         }).then(res => res.json());
 
         // Update publicKey2 input field with delegate_key if it's empty
-        if (publicKey2 === '' || true) {
+        if (publicKey2 === '' || false) {
             publicKey2 = accountResponse.payload.account.ledger.delegate_key;
             publicKey2Input.value = publicKey2;  // Update the input field
         }
