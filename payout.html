@@ -70,11 +70,32 @@
         tr:hover {
             background-color: #d1ede1; /* light green on hover */
         }
+        
+        /* CSS for the warning box */
+        .warning-box {
+            background-color: #ffdddd; /* Light red background */
+            border-left: 6px solid #f44336; /* Red left border */
+            padding: 16px;
+            margin: 20px 0; /* Space around the warning box */
+            border-radius: 4px;
+            color: #333; /* Text color */
+            font-family: Arial, sans-serif;
+        }
+
+        .warning-box strong {
+            font-weight: bold;
+            color: #d8000c; /* Darker red for emphasis */
+        }
+        
     </style>
 </head>
 <body>
     <h1>NAAMAH'S BP PERFORMANCE COMPARISON</h1>
     <h2>Compare the performance of your actual validator with mine 😊</h2>
+    <div class="warning-box">
+        <strong>🚨 Warning!</strong> <i><br/><br/>
+        This is an early pre-release that may be unstable, stop working or deliver innacurate results.
+    </div>    
     <label for="epoch">Epoch:</label>
     <input type="number" id="epoch" value=1><br>
 
