@@ -261,7 +261,14 @@ function populateAccountTable(account) {
 
 function populateDelegatorsTable(ledger, work, account, tableId, publicKey3, showPublicKey3) {
     const delegatorsTable = document.getElementById(tableId);
-    const totalStake = (Number(ledger.stake) + Number(account.info.balance));
+    //const totalStake = (Number(ledger.stake) + Number(account.info.balance));
+    
+    let totalStake = Number(ledger.stake);
+    if (!ledger.delegators.some(d => d.public_key === account.info.key)) {
+        totalStake += Number(account.info.balance);
+    }
+    
+    
     const totalRewards = (Number(work.rewards) + Number(work.transactions_fee)) / 1000000000;
 
     // Add the third public key as a delegator only if it's not already in the list
