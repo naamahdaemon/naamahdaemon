@@ -94,9 +94,10 @@
     <h2>Compare the performance of your actual validator with mine 😊</h2>
     <div class="warning-box">
         <strong>🚨 Warning!</strong> <i><br/><br/>
-        This is an early pre-release that may be unstable, stop working or deliver innacurate results.
+        This is an early pre-release that may be unstable, stop working or deliver innacurate results.<br/>
+        <b>Epoch prior to Hard Fork (&lt;80) won't display accurate results.</b>
     </div>    
-    <label for="epoch">Epoch (since genesis):</label>
+    <label for="epoch">Epoch (since genesis)</label>
     <input type="number" id="epoch" value=81><br>
 
     <label for="publicKey1">Naamah's validator</label>
@@ -184,6 +185,8 @@
     <script>
 async function fetchData() {
     const epoch = document.getElementById('epoch').value;
+    let epoch_since_hardfork = 0;
+    let beforeHF = false;
     const publicKey1 = document.getElementById('publicKey1').value;
     const fee1 = document.getElementById('fee1').value;
     let publicKey2Input = document.getElementById('publicKey2');  // Get reference to publicKey2 input element
@@ -191,10 +194,31 @@ async function fetchData() {
     const fee2 = document.getElementById('fee2').value;
     const publicKey3 = document.getElementById('publicKey3').value;
     const showPublicKey3 = document.getElementById('showPublicKey3').checked;
+    const cors_proxy=false;
+    
+    if (Number(epoch) > 79) {
+      //epoch_since_hardfork = Number(epoch)-80;
+      epoch_since_hardfork = Number(epoch);
+      beforeHF=false;
+      }
+    else {
+      epoch_since_hardfork = Number(epoch);
+      beforeHF=true;
+      }
+
 
     const auth = "my_secret";
     const apiUrl = "https://minataur.net/api/v1";
     const proxyUrl = "https://www.akirion.com:4664/proxy?url=";
+    let accountRoute = apiUrl + "/account";
+    let delegatorsRoute = apiUrl + "/delegators"
+    let workRoute = apiUrl + "/work";
+    
+    if (cors_proxy) {
+      accountRoute = proxyUrl + encodeURIComponent(`${apiUrl}/account`);
+      delegatorsRoute = proxyUrl + encodeURIComponent(`${apiUrl}/delegators`);
+      workRoute = proxyUrl + encodeURIComponent(`${apiUrl}/work`);
+    }
 
     const accountPayload = { auth, publicKey: publicKey3 };
     const delegatorsPayload = { auth, epoch: Number(epoch), publicKey: publicKey1, includeOrphanBlocks: false, beforeHardFork: false };
@@ -214,7 +238,7 @@ async function fetchData() {
     clearTable('delegator2Table');
     try {
         // Fetch account data first
-        const accountResponse = await fetch(proxyUrl + encodeURIComponent(`${apiUrl}/account`), {
+        const accountResponse = await fetch(accountRoute , {
             method: 'POST',
             headers,
             body: JSON.stringify(accountPayload)
@@ -231,25 +255,25 @@ async function fetchData() {
 
         // Fetch all other necessary data
         const [delegatorsResponse, workResponse, delegatorsResponse2, workResponse2] = await Promise.all([
-            fetch(proxyUrl + encodeURIComponent(`${apiUrl}/delegators`), {
+            fetch(delegatorsRoute, {
                 method: 'POST',
                 headers,
                 body: JSON.stringify(delegatorsPayload)
             }).then(res => res.json()),
-            fetch(proxyUrl + encodeURIComponent(`${apiUrl}/work`), {
+            fetch(workRoute, {
                 method: 'POST',
                 headers,
-                body: JSON.stringify({ auth, epoch: Number(epoch), publicKey: publicKey1, includeOrphanBlocks: false, beforeHardFork: false })
+                body: JSON.stringify({ auth, epoch: epoch_since_hardfork, publicKey: publicKey1, includeOrphanBlocks: false, beforeHardFork: beforeHF })
             }).then(res => res.json()),
-            fetch(proxyUrl + encodeURIComponent(`${apiUrl}/delegators`), {
+            fetch(delegatorsRoute, {
                 method: 'POST',
                 headers,
                 body: JSON.stringify(delegatorsPayload2)
             }).then(res => res.json()),
-            fetch(proxyUrl + encodeURIComponent(`${apiUrl}/work`), {
+            fetch(workRoute, {
                 method: 'POST',
                 headers,
-                body: JSON.stringify({ auth, epoch: Number(epoch), publicKey: publicKey2, includeOrphanBlocks: false, beforeHardFork: false })
+                body: JSON.stringify({ auth, epoch: epoch_since_hardfork, publicKey: publicKey2, includeOrphanBlocks: false, beforeHardFork: beforeHF })
             }).then(res => res.json())
         ]);
 
