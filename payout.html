@@ -236,7 +236,8 @@ async function fetchData() {
     let workRoute = apiUrl + "/work";
     // Headers for the proxy request
     let headers = {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+	'Minataur-Authorization': 'ede9adcaec633f3290865e0f85faddbb:4d8801b69d7870786620996ddcb14e551719693200945',
     };
     
     if (cors_proxy) {
