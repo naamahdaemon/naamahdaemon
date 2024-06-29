@@ -117,10 +117,10 @@
     <input type="number" id="epoch" value=81><br>
 
     <label for="publicKey1">Naamah's validator</label>
-    <input type="text" id="publicKey1" value="B62qpsyB3gCndt8sNz4GRwusBtg9U72TNiL4mxmcQfWKZ5noa9fFnWr" style="background-color:lightgrey"><br>
+    <input type="text" id="publicKey1" value="B62qpsyB3gCndt8sNz4GRwusBtg9U72TNiL4mxmcQfWKZ5noa9fFnWr" style="background-color:lightgrey" readonly><br>
 
     <label for="fee1">Naamah's Fees (%)</label>
-    <input type="number" style="background-color:lightgrey" id="fee1" value=1 min="0" max="100"><br>
+    <input type="number" style="background-color:lightgrey" id="fee1" value=1 min="0" max="100" readonly><br>
 
     <label for="fee2">Enter your validator's fee (%)</label>
     <input type="number" id="fee2" value=5 value="5" min="0" max="100"><br>
@@ -237,7 +237,7 @@ async function fetchData() {
     // Headers for the proxy request
     let headers = {
         'Content-Type': 'application/json',
-	'Minataur-Authorization': 'ede9adcaec633f3290865e0f85faddbb:4d8801b69d7870786620996ddcb14e551719693200945',
+        'Minataur-Authorization': 'minataur-token:ede9adcaec633f3290865e0f85faddbb:4d8801b69d7870786620996ddcb14e551719693200945',
     };
     
     if (cors_proxy) {
@@ -247,7 +247,7 @@ async function fetchData() {
 	  headers = {
 		'Content-Type': 'application/json',
 		'x-api-key': 'e0d9da01-c1c5-4c44-b4fa-3cbdb4982ed3',
-		'Minataur-Authorization': 'ede9adcaec633f3290865e0f85faddbb:4d8801b69d7870786620996ddcb14e551719693200945',
+		'Minataur-Authorization': 'minataur-token:ede9adcaec633f3290865e0f85faddbb:4d8801b69d7870786620996ddcb14e551719693200945',
 	  };
     }
 
