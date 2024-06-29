@@ -194,7 +194,7 @@ async function fetchData() {
     const fee2 = document.getElementById('fee2').value;
     const publicKey3 = document.getElementById('publicKey3').value;
     const showPublicKey3 = document.getElementById('showPublicKey3').checked;
-    const cors_proxy=true;
+    const cors_proxy=false;
     
     if (Number(epoch) > 79) {
       //epoch_since_hardfork = Number(epoch)-80;
@@ -213,22 +213,26 @@ async function fetchData() {
     let accountRoute = apiUrl + "/account";
     let delegatorsRoute = apiUrl + "/delegators"
     let workRoute = apiUrl + "/work";
+    // Headers for the proxy request
+    let headers = {
+        'Content-Type': 'application/json'
+    };
     
     if (cors_proxy) {
       accountRoute = proxyUrl + encodeURIComponent(`${apiUrl}/account`);
       delegatorsRoute = proxyUrl + encodeURIComponent(`${apiUrl}/delegators`);
       workRoute = proxyUrl + encodeURIComponent(`${apiUrl}/work`);
+	  headers = {
+		'Content-Type': 'application/json',
+		'x-api-key': 'e0d9da01-c1c5-4c44-b4fa-3cbdb4982ed3'
+	  };
     }
 
     const accountPayload = { auth, publicKey: publicKey3 };
     const delegatorsPayload = { auth, epoch: Number(epoch), publicKey: publicKey1, includeOrphanBlocks: false, beforeHardFork: false };
     let delegatorsPayload2;
 
-    // Headers for the proxy request
-    const headers = {
-        'Content-Type': 'application/json',
-        'x-api-key': 'e0d9da01-c1c5-4c44-b4fa-3cbdb4982ed3'
-    };
+
 
     // Clear existing tables before populating
     clearTable('accountTable');
