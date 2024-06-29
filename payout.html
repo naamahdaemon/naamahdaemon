@@ -87,6 +87,22 @@
             color: #d8000c; /* Darker red for emphasis */
         }
         
+        /* CSS for the info box */
+        .info-box {
+            background-color: #ddffdd; /* Light green background */
+            border-left: 6px solid #43f436; /* green left border */
+            padding: 16px;
+            margin: 20px 0; /* Space around the warning box */
+            border-radius: 4px;
+            color: #333; /* Text color */
+            font-family: Arial, sans-serif;
+        }
+
+        .info-box strong {
+            font-weight: bold;
+            color: #00880c; /* Darker red for emphasis */
+        }        
+        
     </style>
 </head>
 <body>
@@ -182,6 +198,11 @@
         </tr>
     </table>
 
+    <div class="info-box">
+        Visit my web site : <a href='https://mina.naamahdaemon.eu' target=_blank>https://mina.naamahdaemon.eu</a><br/>
+        Big 👍 to Serhii Pimenov for providing the API and for his great work on Minataur mina explorer : <a href='https://minataur.net' target=_blank>https://minataur.net</a>
+    </div>  
+
     <script>
 async function fetchData() {
     const epoch = document.getElementById('epoch').value;
@@ -194,7 +215,7 @@ async function fetchData() {
     const fee2 = document.getElementById('fee2').value;
     const publicKey3 = document.getElementById('publicKey3').value;
     const showPublicKey3 = document.getElementById('showPublicKey3').checked;
-    const cors_proxy=true;
+    const cors_proxy=false;
     
     if (Number(epoch) > 79) {
       //epoch_since_hardfork = Number(epoch)-80;
@@ -422,5 +443,8 @@ function clearTable(tableId) {
     }
 }
 </script>
+  <footer>
+      <p>&copy; 2024 Naamah</p>
+  </footer>
 </body>
 </html>
