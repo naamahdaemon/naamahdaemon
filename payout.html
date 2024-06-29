@@ -79,19 +79,19 @@
     <input type="number" id="epoch"><br>
 
     <label for="publicKey1">Naamah's validator</label>
-    <input type="text" id="publicKey1" value="B62qpsyB3gCndt8sNz4GRwusBtg9U72TNiL4mxmcQfWKZ5noa9fFnWr"><br>
+    <input type="text" id="publicKey1" value="B62qpsyB3gCndt8sNz4GRwusBtg9U72TNiL4mxmcQfWKZ5noa9fFnWr" style="background-color:lightgrey" readonly><br>
 
     <label for="fee1">Naamah's Fees</label>
     <input type="number" style="background-color:lightgrey" id="fee1" value=0.1 readonly><br>
 
     <label for="fee2">Enter your validator's fee</label>
-    <input type="number" id="fee2" value=0.5><br>
+    <input type="number" id="fee2" value=0.5 style="background-color:lightgrey" readonly><br>
 
     <label for="publicKey3">Enter your public Key</label>
     <input type="text" id="publicKey3"><br/>
     
     <label for="publicKey2">Your current validator address</label>
-    <input type="text" id="publicKey2"><br>    
+    <input type="text" id="publicKey2" style="background-color:lightgrey" readonly><br>    
     
     <br/><br/>
     <input type="checkbox" id="showPublicKey3" checked onchange="fetchData()">Filter to display your public key only<br>
@@ -200,7 +200,7 @@ async function fetchData() {
         }).then(res => res.json());
 
         // Update publicKey2 input field with delegate_key if it's empty
-        if (publicKey2 === '' || false) {
+        if (publicKey2 === '' || true) {
             publicKey2 = accountResponse.payload.account.ledger.delegate_key;
             publicKey2Input.value = publicKey2;  // Update the input field
         }
