@@ -94,7 +94,7 @@
     <h2>Compare the performance of your actual validator with mine 😊</h2>
     <div class="warning-box">
         <strong>🚨 Warning!</strong> <i><br/><br/>
-        This is an early pre-release that may be unstable, stop working or deliver innacurate results.<br/>
+        This is an early pre-release that may be unstable, stop working or deliver innacurate results.<br/><br/>
         <b>Epoch prior to Hard Fork (&lt;80) won't display accurate results.</b>
     </div>    
     <label for="epoch">Epoch (since genesis)</label>
@@ -194,7 +194,7 @@ async function fetchData() {
     const fee2 = document.getElementById('fee2').value;
     const publicKey3 = document.getElementById('publicKey3').value;
     const showPublicKey3 = document.getElementById('showPublicKey3').checked;
-    const cors_proxy=false;
+    const cors_proxy=true;
     
     if (Number(epoch) > 79) {
       //epoch_since_hardfork = Number(epoch)-80;
