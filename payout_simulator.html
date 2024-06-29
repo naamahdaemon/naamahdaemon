@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NAAMAH'S BP PERFORMANCE COMPARISON</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8f7; /* light green background */
+            margin: 20px;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            color: #0a7161; /* dark green text */
+        }
+
+        label {
+            display: inline-block;
+            width: 300px;
+            margin-bottom: 5px;
+            color: #0a7161; /* dark green label */
+        }
+
+        input[type="number"], input[type="text"], button {
+            padding: 8px;
+            font-size: 16px;
+            width: 100%;
+            max-width: 600px; /* adjust as needed */
+            border: 1px solid #0a7161; /* dark green border */
+            border-radius: 5px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #0a7161; /* dark green button */
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0d9c84; /* lighter green on hover */
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+            border: 1px solid #0a7161; /* dark green border */
+            border-radius: 5px;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #0a7161; /* dark green border */
+        }
+
+        th {
+            background-color: #0d9c84; /* lighter green header */
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #e6f3f0; /* very light green */
+        }
+
+        tr:hover {
+            background-color: #d1ede1; /* light green on hover */
+        }
+    </style>
+</head>
+<body>
+    <h1>NAAMAH'S BP PERFORMANCE COMPARISON</h1>
+    <h2>Compare the performance of your actual validator with mine 😊</h2>
+    <label for="epoch">Epoch:</label>
+    <input type="number" id="epoch"><br>
+
+    <label for="publicKey1">Naamah's validator</label>
+    <input type="text" id="publicKey1" value="B62qpsyB3gCndt8sNz4GRwusBtg9U72TNiL4mxmcQfWKZ5noa9fFnWr"><br>
+
+    <label for="fee1">Naamah's Fees</label>
+    <input type="number" style="background-color:lightgrey" id="fee1" value=0.1 readonly><br>
+
+    <label for="fee2">Enter your validator's fee</label>
+    <input type="number" id="fee2" value=0.5><br>
+
+    <label for="publicKey3">Enter your public Key</label>
+    <input type="text" id="publicKey3"><br/>
+    
+    <label for="publicKey2">Your current validator address</label>
+    <input type="text" id="publicKey2"><br>    
+    
+    <br/><br/>
+    <input type="checkbox" id="showPublicKey3" checked onchange="fetchData()">Filter to display your public key only<br>
+    <br/><br/>
+    
+    <center><button onclick="fetchData()">Compare</button></center>
+
+    <hr/>
+
+    <h2>Account Information</h2>
+    <table id="accountTable">
+        <tr>
+            <th>Public Key</th>
+            <th>Balance</th>
+            <th>Delegate Key</th>
+        </tr>
+    </table>
+
+    <h2>Naamah's Block Stats</h2>
+    <table id="delegator1Table">
+        <tr>
+            <th>Public Key</th>
+            <th>Blocks Produced</th>
+            <th>Rewards</th>
+            <th>Snarks Fee</th>
+            <th>Transactions Fee</th>
+        </tr>
+    </table>
+
+    <h2>Your Validator Block Stats</h2>
+    <table id="delegator2Table">
+        <tr>
+            <th>Public Key</th>
+            <th>Blocks Produced</th>
+            <th>Rewards</th>
+            <th>Snarks Fee</th>
+            <th>Transactions Fee</th>
+        </tr>
+    </table>
+
+    <h2>Naamah's Validator</h2>
+    <table id="delegatorsTable">
+        <tr>
+            <th>Public Key</th>
+            <th>Locked</th>
+            <th>Balance</th>
+            <th>Is O1Labs</th>
+            <th>Is Found</th>
+            <th>Is Investor</th>
+            <th>Share (%)</th>
+            <th>Total Due Amount</th>
+        </tr>
+    </table>
+
+    <h2>Your current validator</h2>
+    <table id="delegatorsTable2">
+        <tr>
+            <th>Public Key</th>
+            <th>Locked</th>
+            <th>Balance</th>
+            <th>Is O1Labs</th>
+            <th>Is Found</th>
+            <th>Is Investor</th>
+            <th>Share (%)</th>
+            <th>Total Due Amount</th>
+        </tr>
+    </table>
+
+    <script>
+async function fetchData() {
+    const epoch = document.getElementById('epoch').value;
+    const publicKey1 = document.getElementById('publicKey1').value;
+    const fee1 = document.getElementById('fee1').value;
+    let publicKey2Input = document.getElementById('publicKey2');  // Get reference to publicKey2 input element
+    let publicKey2 = publicKey2Input.value;  // Get current value of publicKey2 input field
+    const fee2 = document.getElementById('fee2').value;
+    const publicKey3 = document.getElementById('publicKey3').value;
+    const showPublicKey3 = document.getElementById('showPublicKey3').checked;
+
+    const auth = "my_secret";
+    const apiUrl = "https://minataur.net/api/v1";
+    const proxyUrl = "https://www.akirion.com:4664/proxy?url=";
+
+    const accountPayload = { auth, publicKey: publicKey3 };
+    const delegatorsPayload = { auth, epoch: Number(epoch), publicKey: publicKey1, includeOrphanBlocks: false, beforeHardFork: false };
+    let delegatorsPayload2;
+
+    // Headers for the proxy request
+    const headers = {
+        'Content-Type': 'application/json',
+        'x-api-key': 'e0d9da01-c1c5-4c44-b4fa-3cbdb4982ed3'
+    };
+
+    // Clear existing tables before populating
+    clearTable('accountTable');
+    clearTable('delegatorsTable');
+    clearTable('delegatorsTable2');
+    clearTable('delegator1Table');
+    clearTable('delegator2Table');
+    try {
+        // Fetch account data first
+        const accountResponse = await fetch(proxyUrl + encodeURIComponent(`${apiUrl}/account`), {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(accountPayload)
+        }).then(res => res.json());
+
+        // Update publicKey2 input field with delegate_key if it's empty
+        if (publicKey2 === '' || false) {
+            publicKey2 = accountResponse.payload.account.ledger.delegate_key;
+            publicKey2Input.value = publicKey2;  // Update the input field
+        }
+
+        // Update delegatorsPayload2 with the correct publicKey2
+        delegatorsPayload2 = { auth, epoch: Number(epoch), publicKey: publicKey2, includeOrphanBlocks: false, beforeHardFork: false };
+
+        // Fetch all other necessary data
+        const [delegatorsResponse, workResponse, delegatorsResponse2, workResponse2] = await Promise.all([
+            fetch(proxyUrl + encodeURIComponent(`${apiUrl}/delegators`), {
+                method: 'POST',
+                headers,
+                body: JSON.stringify(delegatorsPayload)
+            }).then(res => res.json()),
+            fetch(proxyUrl + encodeURIComponent(`${apiUrl}/work`), {
+                method: 'POST',
+                headers,
+                body: JSON.stringify({ auth, epoch: Number(epoch), publicKey: publicKey1, includeOrphanBlocks: false, beforeHardFork: false })
+            }).then(res => res.json()),
+            fetch(proxyUrl + encodeURIComponent(`${apiUrl}/delegators`), {
+                method: 'POST',
+                headers,
+                body: JSON.stringify(delegatorsPayload2)
+            }).then(res => res.json()),
+            fetch(proxyUrl + encodeURIComponent(`${apiUrl}/work`), {
+                method: 'POST',
+                headers,
+                body: JSON.stringify({ auth, epoch: Number(epoch), publicKey: publicKey2, includeOrphanBlocks: false, beforeHardFork: false })
+            }).then(res => res.json())
+        ]);
+
+        // Populate tables with fetched data
+        populateAccountTable(accountResponse.payload.account);
+
+        if (showPublicKey3) {
+            populateDelegatorsTable(delegatorsResponse.payload.ledger, workResponse.payload.work, accountResponse.payload.account, 'delegatorsTable', publicKey3, showPublicKey3);
+            populateDelegatorsTable(delegatorsResponse2.payload.ledger, workResponse2.payload.work, accountResponse.payload.account, 'delegatorsTable2', publicKey3, showPublicKey3);
+        } else {
+            populateDelegatorsTable(delegatorsResponse.payload.ledger, workResponse.payload.work, accountResponse.payload.account, 'delegatorsTable', publicKey3);
+            populateDelegatorsTable(delegatorsResponse2.payload.ledger, workResponse2.payload.work, accountResponse.payload.account, 'delegatorsTable2', publicKey3);
+        }
+
+        populateDelegatorTable('delegator1Table', workResponse.payload.work);
+        populateDelegatorTable('delegator2Table', workResponse2.payload.work);
+
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
+
+function populateAccountTable(account) {
+    const accountTable = document.getElementById('accountTable');
+    const row = accountTable.insertRow();
+    row.insertCell(0).innerText = account.info.key;
+    row.insertCell(1).innerText = (Number(account.info.balance) / 1000000000).toFixed(4);
+    row.insertCell(2).innerText = account.ledger.delegate_key;
+}
+
+function populateDelegatorsTable(ledger, work, account, tableId, publicKey3, showPublicKey3) {
+    const delegatorsTable = document.getElementById(tableId);
+    //const totalStake = (Number(ledger.stake) + Number(account.info.balance));
+    
+    let totalStake = Number(ledger.stake);
+    if (!ledger.delegators.some(d => d.public_key === account.info.key)) {
+        totalStake += Number(account.info.balance);
+    }
+    
+    
+    const totalRewards = (Number(work.rewards) + Number(work.transactions_fee)) / 1000000000;
+
+    // Add the third public key as a delegator only if it's not already in the list
+    const thirdDelegator = {
+        public_key: account.info.key,
+        balance: account.info.balance,
+        locked: false,
+        is_o1labs: account.info.is_o1labs,
+        is_found: account.info.is_found,
+        is_investor: account.info.is_investor
+    };
+
+    if (!ledger.delegators.some(d => d.public_key === thirdDelegator.public_key)) {
+        // Add thirdDelegator to ledger.delegators
+        ledger.delegators.push(thirdDelegator);
+    }
+
+    // Sort the delegators array by balance in descending order
+    const sortedDelegators = ledger.delegators.sort((a, b) => Number(b.balance) - Number(a.balance));
+
+    let totalBalance = 0;
+    let totalShares = 0;
+    let totalDueAmount = 0;
+
+    sortedDelegators.forEach(delegator => {
+        if (!showPublicKey3 || delegator.public_key === publicKey3) { // Check if publicKey3 is empty or matches current delegator.public_key
+            const row = delegatorsTable.insertRow();
+            row.insertCell(0).innerText = delegator.public_key;
+            row.insertCell(1).innerText = delegator.locked;
+            const balance = (Number(delegator.balance) / 1000000000).toFixed(4);
+            row.insertCell(2).innerText = balance;
+            totalBalance += parseFloat(balance);
+
+            const isO1labsCell = row.insertCell(3);
+            const isO1labsCheckbox = document.createElement('input');
+            isO1labsCheckbox.type = 'checkbox';
+            isO1labsCheckbox.checked = delegator.is_o1labs;
+            isO1labsCell.appendChild(isO1labsCheckbox);
+
+            const isFoundCell = row.insertCell(4);
+            const isFoundCheckbox = document.createElement('input');
+            isFoundCheckbox.type = 'checkbox';
+            isFoundCheckbox.checked = delegator.is_found;
+            isFoundCell.appendChild(isFoundCheckbox);
+
+            const isInvestorCell = row.insertCell(5);
+            const isInvestorCheckbox = document.createElement('input');
+            isInvestorCheckbox.type = 'checkbox';
+            isInvestorCheckbox.checked = delegator.is_investor;
+            isInvestorCell.appendChild(isInvestorCheckbox);
+
+            const share = Number(delegator.balance) / Number(totalStake);
+            const sharePercent = (share * 100).toFixed(8);
+            row.insertCell(6).innerText = sharePercent;
+            totalShares += parseFloat(sharePercent);
+
+            let totalDue = totalRewards * share;
+            if (delegator.is_found || delegator.is_investor) {
+                totalDue *= 0.92;
+            } else if (delegator.is_o1labs) {
+                totalDue *= 0.95;
+            } else {
+                totalDue *= 0.99;
+            }
+            const totalDueRounded = totalDue.toFixed(4);
+            row.insertCell(7).innerText = totalDueRounded;
+            totalDueAmount += parseFloat(totalDueRounded);
+
+            if (publicKey3 && publicKey3 === delegator.public_key) {
+                row.style.backgroundColor = 'yellow';
+            }
+        }
+    });
+
+    // Add the total row
+    const totalRow = delegatorsTable.insertRow();
+    totalRow.insertCell(0).innerText = 'Total';
+    totalRow.insertCell(1).innerText = '';
+    totalRow.insertCell(2).innerText = totalBalance.toFixed(4);
+    totalRow.insertCell(3).innerText = '';
+    totalRow.insertCell(4).innerText = '';
+    totalRow.insertCell(5).innerText = '';
+    totalRow.insertCell(6).innerText = totalShares.toFixed(8);
+    totalRow.insertCell(7).innerText = totalDueAmount.toFixed(4);
+}
+
+function populateDelegatorTable(tableId, work) {
+    const delegatorTable = document.getElementById(tableId);
+    const row = delegatorTable.insertRow();
+    row.insertCell(0).innerText = work.publicKey;
+    row.insertCell(1).innerText = work.count;
+    row.insertCell(2).innerText = (Number(work.rewards) / 1000000000).toFixed(4);
+    row.insertCell(3).innerText = (Number(work.snarks_fee) / 1000000000).toFixed(4);
+    row.insertCell(4).innerText = (Number(work.transactions_fee) / 1000000000).toFixed(4);
+}
+
+function clearTable(tableId) {
+    const table = document.getElementById(tableId);
+    // Remove all rows except the header row
+    while (table.rows.length > 1) {
+        table.deleteRow(1);
+    }
+}
+</script>
+</body>
+</html>
