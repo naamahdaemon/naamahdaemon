@@ -322,12 +322,46 @@ async function fetchData() {
     }
 }
 
+function createTruncatedKeyCell(key) {
+    const fullKey = key;
+    const truncatedKey = `${fullKey.slice(0, 6)}...${fullKey.slice(-6)}`;
+
+    const cell = document.createElement('td');
+    cell.innerText = truncatedKey;
+
+    // Create a span element for the copy emoji
+    const copyEmoji = document.createElement('span');
+    copyEmoji.textContent = ' 📋';
+    copyEmoji.style.cursor = 'pointer';
+    copyEmoji.title = 'Click to copy full key';
+
+    // Add click event listener to copy the full key
+    copyEmoji.addEventListener('click', () => {
+        navigator.clipboard.writeText(fullKey).then(() => {
+            alert(fullKey + ' copied to clipboard!');
+        }).catch(err => {
+            console.error('Failed to copy full key: ', err);
+        });
+    });
+
+    // Append copy emoji span to the cell
+    cell.appendChild(copyEmoji);
+
+    return cell;
+}
+
 function populateAccountTable(account) {
     const accountTable = document.getElementById('accountTable');
     const row = accountTable.insertRow();
-    row.insertCell(0).innerText = account.info.key;
-    row.insertCell(1).innerText = (Number(account.info.balance) / 1000000000).toFixed(4);
-    row.insertCell(2).innerText = account.ledger.delegate_key;
+
+    const keyCell = createTruncatedKeyCell(account.info.key);
+    row.appendChild(keyCell);
+
+    const balanceCell = row.insertCell(1);
+    balanceCell.innerText = (Number(account.info.balance) / 1000000000).toFixed(4);
+
+    const delegateKeyCell = createTruncatedKeyCell(account.ledger.delegate_key);
+    row.appendChild(delegateKeyCell);
 }
 
 function populateDelegatorsTable(ledger, work, account, tableId, publicKey3, showPublicKey3, fee) {
@@ -367,7 +401,9 @@ function populateDelegatorsTable(ledger, work, account, tableId, publicKey3, sho
     sortedDelegators.forEach(delegator => {
         if (!showPublicKey3 || delegator.public_key === publicKey3) { // Check if publicKey3 is empty or matches current delegator.public_key
             const row = delegatorsTable.insertRow();
-            row.insertCell(0).innerText = delegator.public_key;
+            const keyCell = createTruncatedKeyCell(delegator.public_key); // Use createTruncatedKeyCell for public_key
+            row.appendChild(keyCell);
+
             row.insertCell(1).innerText = delegator.locked;
             const balance = (Number(delegator.balance) / 1000000000).toFixed(4);
             row.insertCell(2).innerText = balance;
@@ -426,15 +462,20 @@ function populateDelegatorsTable(ledger, work, account, tableId, publicKey3, sho
     totalRow.insertCell(7).innerText = totalDueAmount.toFixed(4);
 }
 
+
 function populateDelegatorTable(tableId, work) {
     const delegatorTable = document.getElementById(tableId);
     const row = delegatorTable.insertRow();
-    row.insertCell(0).innerText = work.publicKey;
+
+    const keyCell = createTruncatedKeyCell(work.publicKey); // Use createTruncatedKeyCell for publicKey
+    row.appendChild(keyCell);
+
     row.insertCell(1).innerText = work.count;
     row.insertCell(2).innerText = (Number(work.rewards) / 1000000000).toFixed(4);
     row.insertCell(3).innerText = (Number(work.snarks_fee) / 1000000000).toFixed(4);
     row.insertCell(4).innerText = (Number(work.transactions_fee) / 1000000000).toFixed(4);
 }
+
 
 function clearTable(tableId) {
     const table = document.getElementById(tableId);
