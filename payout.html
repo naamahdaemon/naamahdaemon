@@ -43,7 +43,7 @@
         button:hover {
             background-color: #0d9c84; /* lighter green on hover */
         }
-
+        
         table {
             border-collapse: collapse;
             width: 100%;
@@ -143,16 +143,19 @@
     <hr/>
 
     <h2>Account Information</h2>
-    <table id="accountTable" class="table-container">
+    <div class="table-container">
+    <table id="accountTable">
         <tr>
             <th>Public Key</th>
             <th>Balance</th>
             <th>Delegate Key</th>
         </tr>
     </table>
+    </div>
 
     <h2>Naamah's Block Stats</h2>
-    <table id="delegator1Table" class="table-container">
+    <div class="table-container">
+    <table id="delegator1Table">
         <tr>
             <th>Key</th>
             <th>#Blocks</th>
@@ -161,9 +164,11 @@
             <th>Trans. Fee</th>
         </tr>
     </table>
+    </div>
 
     <h2>Your Validator Block Stats</h2>
-    <table id="delegator2Table" class="table-container">
+    <div class="table-container">
+    <table id="delegator2Table">
         <tr>
             <th>Key</th>
             <th>#Blocks</th>
@@ -172,9 +177,10 @@
             <th>Trans. Fee</th>
         </tr>
     </table>
-
+    </div>
     <h2>Naamah's Validator</h2>
-    <table id="delegatorsTable" class="table-container">
+    <div class="table-container">
+    <table id="delegatorsTable">
         <tr>
             <th>Key</th>
             <th>Lock</th>
@@ -186,9 +192,11 @@
             <th>Payout</th>
         </tr>
     </table>
+    </div>
 
     <h2>Your current validator</h2>
-    <table id="delegatorsTable2" class="table-container">
+    <div class="table-container">
+    <table id="delegatorsTable2">
         <tr>
             <th>Key</th>
             <th>Lock</th>
@@ -200,6 +208,7 @@
             <th>Payout</th>
         </tr>
     </table>
+    </div>
 
     <div class="info-box">
         Visit my web site : <a href='https://mina.naamahdaemon.eu' target=_blank>https://mina.naamahdaemon.eu</a><br/>
