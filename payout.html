@@ -176,9 +176,9 @@
             <th>Key</th>
             <th>Lock</th>
             <th>Bal.</th>
-            <th>O1</th>
-            <th>Found</th>
-            <th>Inv</th>
+            <th>O</th>
+            <th>F</th>
+            <th>I</th>
             <th>Share</th>
             <th>Payout</th>
         </tr>
@@ -190,9 +190,9 @@
             <th>Key</th>
             <th>Lock</th>
             <th>Bal.</th>
-            <th>O1</th>
-            <th>Found</th>
-            <th>Inv</th>
+            <th>O</th>
+            <th>F</th>
+            <th>I</th>
             <th>Share</th>
             <th>Payout</th>
         </tr>
@@ -328,6 +328,7 @@ function createTruncatedKeyCell(key) {
 
     const cell = document.createElement('td');
     cell.innerText = truncatedKey;
+    cell.style.whiteSpace = 'nowrap'; // Prevent wrapping of content
 
     // Create a span element for the copy emoji
     const copyEmoji = document.createElement('span');
