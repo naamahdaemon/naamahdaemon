@@ -121,6 +121,11 @@
             width: 100%; /* Set the desired width of the container */
             overflow-x: auto; /* Enable horizontal scrolling */
         }
+        
+        .copy-emoji {
+            cursor: pointer;
+            margin-left: 10px;
+        }        
     </style>
 </head>
 <body>
@@ -539,13 +544,23 @@ function clearTable(tableId) {
         table.deleteRow(1);
     }
 }
+
+function copyText() {
+    const textToCopy = document.getElementById('bp-address').textContent;
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        alert(textToCopy + ' copied to clipboard');
+    }).catch(err => {
+        console.error('Failed to copy text: ', err);
+    });
+}
+
 </script>
   <footer>
       <p><center>&copy; 2024 Naamah - <a href='https://mina.naamahdaemon.eu/blog/welcome' target=_blank>https://mina.naamahdaemon.eu</a></center></p>
       <br/>
       <center><img src="./naamah_bp_qrcode.png" width=240/></center><br/>
       <div class="wrapped-text">
-          <b>B62qpsyB3gCndt8sNz4GRwusBtg9U72TNiL4mxmcQfWKZ5noa9fFnWr</b>
+          <b id="bp-address">B62qpsyB3gCndt8sNz4GRwusBtg9U72TNiL4mxmcQfWKZ5noa9fFnWr</b><span class="copy-emoji" onclick="copyText()">📋</span>
       </div><br/><br/>
       <div class="info-box">
           Big 👍 to Serhii Pimenov for providing the API and for his great work on Minataur mina explorer : <a href='https://minataur.net' target=_blank>https://minataur.net</a>
