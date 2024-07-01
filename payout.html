@@ -477,12 +477,23 @@ function populateDelegatorsTable(ledger, work, account, tableId, publicKey3, sho
     const totalRow = delegatorsTable.insertRow();
     totalRow.insertCell(0).innerText = 'Total';
     totalRow.insertCell(1).innerText = '';
-    totalRow.insertCell(2).innerText = totalBalance.toFixed(4);
+    
+    const totalBalanceCell = totalRow.insertCell(2);
+    totalBalanceCell.innerText = totalBalance.toFixed(4);
+    totalBalanceCell.style.textAlign = 'right';
+    
     totalRow.insertCell(3).innerText = '';
     totalRow.insertCell(4).innerText = '';
     totalRow.insertCell(5).innerText = '';
-    totalRow.insertCell(6).innerText = totalShares.toFixed(2) + '%';
-    totalRow.insertCell(7).innerText = totalDueAmount.toFixed(4);
+    
+    const totalSharesCell = totalRow.insertCell(6);
+    totalSharesCell.innerText = totalShares.toFixed(2) + '%';
+    totalSharesCell.style.textAlign = 'right';
+    
+    const totalDueAmountCell = totalRow.insertCell(7);
+    totalDueAmountCell.innerText = totalDueAmount.toFixed(4);
+    totalDueAmountCell.style.textAlign = 'right';
+
 }
 
 
