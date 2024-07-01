@@ -118,10 +118,10 @@
     <div class="warning-box">
         <strong>🚨 Warning!</strong> <i><br/>
         This is an early pre-release that may be unstable, stop working or deliver innacurate results.<br/>
-        <b>Epoch prior to Hard Fork (&lt;80) won't display accurate results.</b>
+        <b>Only the epochs post hardfork (>0) on the new chain are taken into account.</b>
     </div>    
-    <label for="epoch">Epoch (since genesis)</label>
-    <input type="number" id="epoch" value="81" min="80"><br>
+    <label for="epoch">Epoch (since hardfork)</label>
+    <input type="number" id="epoch" value="1" min="0"><br>
 
     <label for="publicKey1">Naamah's validator</label>
     <input type="text" id="publicKey1" value="B62qpsyB3gCndt8sNz4GRwusBtg9U72TNiL4mxmcQfWKZ5noa9fFnWr" style="background-color:lightgrey"><br>
@@ -225,7 +225,8 @@
 
     <script>
 async function fetchData() {
-    const epoch = document.getElementById('epoch').value;
+    let epoch = document.getElementById('epoch').value;
+    epoch = Number(epoch)+80;
     let epoch_since_hardfork = 0;
     let beforeHF = false;
     const publicKey1 = document.getElementById('publicKey1').value;
@@ -237,16 +238,18 @@ async function fetchData() {
     const showPublicKey3 = document.getElementById('showPublicKey3').checked;
     const cors_proxy=true;
     
-    if (Number(epoch) > 79) {
+    //if (Number(epoch) > 79) {
       //epoch_since_hardfork = Number(epoch)-80;
       epoch_since_hardfork = Number(epoch);
       beforeHF=false;
-      }
-    else {
-      epoch_since_hardfork = Number(epoch);
-      beforeHF=true;
-      }
+      //}
+    //else {
+      //epoch_since_hardfork = Number(epoch);
+      //beforeHF=true;
+      //}
 
+    console.log(epoch);
+    console.log(epoch_since_hardfork);
 
     const auth = "my_secret";
     const apiUrl = "https://minataur.net/api/v1";
@@ -483,19 +486,19 @@ function populateDelegatorsTable(ledger, work, account, tableId, publicKey3, sho
     const totalRow = delegatorsTable.insertRow();
     totalRow.insertCell(0).innerText = 'Total';
     totalRow.insertCell(1).innerText = '';
-    
+
     const totalBalanceCell = totalRow.insertCell(2);
     totalBalanceCell.innerText = totalBalance.toFixed(4);
     totalBalanceCell.style.textAlign = 'right';
-    
+
     totalRow.insertCell(3).innerText = '';
     totalRow.insertCell(4).innerText = '';
     totalRow.insertCell(5).innerText = '';
-    
+
     const totalSharesCell = totalRow.insertCell(6);
     totalSharesCell.innerText = totalShares.toFixed(2) + '%';
     totalSharesCell.style.textAlign = 'right';
-    
+
     const totalDueAmountCell = totalRow.insertCell(7);
     totalDueAmountCell.innerText = totalDueAmount.toFixed(4);
     totalDueAmountCell.style.textAlign = 'right';
