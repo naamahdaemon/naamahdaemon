@@ -405,7 +405,7 @@ function populateDelegatorsTable(ledger, work, account, tableId, publicKey3, sho
         public_key: account.info.key,
         balance: account.info.balance,
         locked: false,
-        is_o1labs: account.info.is_o1labs,
+        is_olabs: account.info.is_olabs,
         is_found: account.info.is_found,
         is_investor: account.info.is_investor
     };
@@ -439,7 +439,7 @@ function populateDelegatorsTable(ledger, work, account, tableId, publicKey3, sho
             const isO1labsCell = row.insertCell(3);
             const isO1labsCheckbox = document.createElement('input');
             isO1labsCheckbox.type = 'checkbox';
-            isO1labsCheckbox.checked = delegator.is_o1labs;
+            isO1labsCheckbox.checked = delegator.is_olabs;
             isO1labsCheckbox.disabled = true;
             isO1labsCell.appendChild(isO1labsCheckbox);
 
@@ -468,7 +468,7 @@ function populateDelegatorsTable(ledger, work, account, tableId, publicKey3, sho
             let totalDue = totalRewards * share;
             if (delegator.is_found || delegator.is_investor) {
                 totalDue *= 0.92;
-            } else if (delegator.is_o1labs) {
+            } else if (delegator.is_olabs) {
                 totalDue *= 0.95;
             } else {
                 totalDue *= (100 - fee) / 100;
