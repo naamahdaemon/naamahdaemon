@@ -45,7 +45,7 @@
         button:hover {
             background-color: #0d9c84; /* lighter green on hover */
         }
-        
+
         table {
             border-collapse: collapse;
             width: 100%;
@@ -420,8 +420,11 @@ function populateDelegatorsTable(ledger, work, account, tableId, publicKey3, sho
             row.appendChild(keyCell);
 
             row.insertCell(1).innerText = delegator.locked;
+            
             const balance = (Number(delegator.balance) / 1000000000).toFixed(4);
-            row.insertCell(2).innerText = balance;
+            const balanceCell = row.insertCell(2);
+            balanceCell.innerText = balance;
+            balanceCell.style.textAlign = 'right';
             totalBalance += parseFloat(balance);
 
             const isO1labsCell = row.insertCell(3);
@@ -444,7 +447,9 @@ function populateDelegatorsTable(ledger, work, account, tableId, publicKey3, sho
 
             const share = Number(delegator.balance) / Number(totalStake);
             const sharePercent = (share * 100).toFixed(8);
-            row.insertCell(6).innerText = parseFloat(sharePercent).toFixed(2) + '%'; // Display with 2 decimal places
+            const sharePercentCell = row.insertCell(6);
+            sharePercentCell.innerText = parseFloat(sharePercent).toFixed(2) + '%'; // Display with 2 decimal places
+            sharePercentCell.style.textAlign = 'right';
             totalShares += parseFloat(sharePercent);
 
             let totalDue = totalRewards * share;
@@ -453,10 +458,12 @@ function populateDelegatorsTable(ledger, work, account, tableId, publicKey3, sho
             } else if (delegator.is_o1labs) {
                 totalDue *= 0.95;
             } else {
-                totalDue *= (100-fee)/100;
+                totalDue *= (100 - fee) / 100;
             }
             const totalDueRounded = totalDue.toFixed(4);
-            row.insertCell(7).innerText = totalDueRounded;
+            const totalDueCell = row.insertCell(7);
+            totalDueCell.innerText = totalDueRounded;
+            totalDueCell.style.textAlign = 'right';
             totalDueAmount += parseFloat(totalDueRounded);
 
             if (publicKey3 && publicKey3 === delegator.public_key) {
@@ -464,6 +471,7 @@ function populateDelegatorsTable(ledger, work, account, tableId, publicKey3, sho
             }
         }
     });
+
 
     // Add the total row
     const totalRow = delegatorsTable.insertRow();
