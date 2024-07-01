@@ -444,7 +444,7 @@ function populateDelegatorsTable(ledger, work, account, tableId, publicKey3, sho
 
             const share = Number(delegator.balance) / Number(totalStake);
             const sharePercent = (share * 100).toFixed(8);
-            row.insertCell(6).innerText = sharePercent;
+            row.insertCell(6).innerText = parseFloat(sharePercent).toFixed(2) + '%'; // Display with 2 decimal places
             totalShares += parseFloat(sharePercent);
 
             let totalDue = totalRewards * share;
@@ -473,7 +473,7 @@ function populateDelegatorsTable(ledger, work, account, tableId, publicKey3, sho
     totalRow.insertCell(3).innerText = '';
     totalRow.insertCell(4).innerText = '';
     totalRow.insertCell(5).innerText = '';
-    totalRow.insertCell(6).innerText = totalShares.toFixed(2);
+    totalRow.insertCell(6).innerText = totalShares.toFixed(2) + '%';
     totalRow.insertCell(7).innerText = totalDueAmount.toFixed(4);
 }
 
