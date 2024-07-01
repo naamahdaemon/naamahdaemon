@@ -440,19 +440,23 @@ function populateDelegatorsTable(ledger, work, account, tableId, publicKey3, sho
             const isO1labsCheckbox = document.createElement('input');
             isO1labsCheckbox.type = 'checkbox';
             isO1labsCheckbox.checked = delegator.is_o1labs;
+            isO1labsCheckbox.disabled = true;
             isO1labsCell.appendChild(isO1labsCheckbox);
 
             const isFoundCell = row.insertCell(4);
             const isFoundCheckbox = document.createElement('input');
             isFoundCheckbox.type = 'checkbox';
             isFoundCheckbox.checked = delegator.is_found;
+            isFoundCheckbox.disabled = true;
             isFoundCell.appendChild(isFoundCheckbox);
 
             const isInvestorCell = row.insertCell(5);
             const isInvestorCheckbox = document.createElement('input');
             isInvestorCheckbox.type = 'checkbox';
             isInvestorCheckbox.checked = delegator.is_investor;
+            isInvestorCheckbox.disabled = true;
             isInvestorCell.appendChild(isInvestorCheckbox);
+
 
             const share = Number(delegator.balance) / Number(totalStake);
             const sharePercent = (share * 100).toFixed(8);
