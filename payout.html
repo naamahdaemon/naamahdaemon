@@ -443,7 +443,7 @@ function populateDelegatorsTable(ledger, work, account, tableId, publicKey3, sho
             isInvestorCell.appendChild(isInvestorCheckbox);
 
             const share = Number(delegator.balance) / Number(totalStake);
-            const sharePercent = (share * 100).toFixed(2);
+            const sharePercent = (share * 100).toFixed(8);
             row.insertCell(6).innerText = sharePercent;
             totalShares += parseFloat(sharePercent);
 
